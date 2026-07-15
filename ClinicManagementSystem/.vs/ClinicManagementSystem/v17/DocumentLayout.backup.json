@@ -1,0 +1,126 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Envy\\Desktop\\.net GBG\\Project-3\\ClinicManagementSystem\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3077EAEC-F959-4957-928E-391473920743}|ClinicManagementSystem.csproj|c:\\users\\envy\\desktop\\.net gbg\\project-3\\clinicmanagementsystem\\backend\\features\\patients\\mapping\\patientprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3077EAEC-F959-4957-928E-391473920743}|ClinicManagementSystem.csproj|solutionrelative:backend\\features\\patients\\mapping\\patientprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3077EAEC-F959-4957-928E-391473920743}|ClinicManagementSystem.csproj|c:\\users\\envy\\desktop\\.net gbg\\project-3\\clinicmanagementsystem\\backend\\features\\appointments\\controllers\\appointmentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3077EAEC-F959-4957-928E-391473920743}|ClinicManagementSystem.csproj|solutionrelative:backend\\features\\appointments\\controllers\\appointmentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3077EAEC-F959-4957-928E-391473920743}|ClinicManagementSystem.csproj|c:\\users\\envy\\desktop\\.net gbg\\project-3\\clinicmanagementsystem\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3077EAEC-F959-4957-928E-391473920743}|ClinicManagementSystem.csproj|solutionrelative:backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3077EAEC-F959-4957-928E-391473920743}|ClinicManagementSystem.csproj|c:\\users\\envy\\desktop\\.net gbg\\project-3\\clinicmanagementsystem\\backend\\features\\doctors\\mapping\\doctorprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3077EAEC-F959-4957-928E-391473920743}|ClinicManagementSystem.csproj|solutionrelative:backend\\features\\doctors\\mapping\\doctorprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3077EAEC-F959-4957-928E-391473920743}|ClinicManagementSystem.csproj|c:\\users\\envy\\desktop\\.net gbg\\project-3\\clinicmanagementsystem\\backend\\features\\medicalrecords\\mapping\\medicalrecordprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3077EAEC-F959-4957-928E-391473920743}|ClinicManagementSystem.csproj|solutionrelative:backend\\features\\medicalrecords\\mapping\\medicalrecordprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3077EAEC-F959-4957-928E-391473920743}|ClinicManagementSystem.csproj|c:\\users\\envy\\desktop\\.net gbg\\project-3\\clinicmanagementsystem\\backend\\features\\appointments\\mapping\\appointmnetprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3077EAEC-F959-4957-928E-391473920743}|ClinicManagementSystem.csproj|solutionrelative:backend\\features\\appointments\\mapping\\appointmnetprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AppointmentsController.cs",
+              "DocumentMoniker": "C:\\Users\\Envy\\Desktop\\.net GBG\\Project-3\\ClinicManagementSystem\\backend\\Features\\Appointments\\Controllers\\AppointmentsController.cs",
+              "RelativeDocumentMoniker": "backend\\Features\\Appointments\\Controllers\\AppointmentsController.cs",
+              "ToolTip": "C:\\Users\\Envy\\Desktop\\.net GBG\\Project-3\\ClinicManagementSystem\\backend\\Features\\Appointments\\Controllers\\AppointmentsController.cs",
+              "RelativeToolTip": "backend\\Features\\Appointments\\Controllers\\AppointmentsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-14T23:37:01.848Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Envy\\Desktop\\.net GBG\\Project-3\\ClinicManagementSystem\\backend\\Program.cs",
+              "RelativeDocumentMoniker": "backend\\Program.cs",
+              "ToolTip": "C:\\Users\\Envy\\Desktop\\.net GBG\\Project-3\\ClinicManagementSystem\\backend\\Program.cs",
+              "RelativeToolTip": "backend\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-14T23:24:34.45Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MedicalRecordProfile.cs",
+              "DocumentMoniker": "C:\\Users\\Envy\\Desktop\\.net GBG\\Project-3\\ClinicManagementSystem\\backend\\Features\\MedicalRecords\\Mapping\\MedicalRecordProfile.cs",
+              "RelativeDocumentMoniker": "backend\\Features\\MedicalRecords\\Mapping\\MedicalRecordProfile.cs",
+              "ToolTip": "C:\\Users\\Envy\\Desktop\\.net GBG\\Project-3\\ClinicManagementSystem\\backend\\Features\\MedicalRecords\\Mapping\\MedicalRecordProfile.cs",
+              "RelativeToolTip": "backend\\Features\\MedicalRecords\\Mapping\\MedicalRecordProfile.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-14T23:09:11.47Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AppointmnetProfile.cs",
+              "DocumentMoniker": "C:\\Users\\Envy\\Desktop\\.net GBG\\Project-3\\ClinicManagementSystem\\backend\\Features\\Appointments\\Mapping\\AppointmnetProfile.cs",
+              "RelativeDocumentMoniker": "backend\\Features\\Appointments\\Mapping\\AppointmnetProfile.cs",
+              "ToolTip": "C:\\Users\\Envy\\Desktop\\.net GBG\\Project-3\\ClinicManagementSystem\\backend\\Features\\Appointments\\Mapping\\AppointmnetProfile.cs",
+              "RelativeToolTip": "backend\\Features\\Appointments\\Mapping\\AppointmnetProfile.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-14T23:07:18.215Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PatientProfile.cs",
+              "DocumentMoniker": "C:\\Users\\Envy\\Desktop\\.net GBG\\Project-3\\ClinicManagementSystem\\backend\\Features\\Patients\\Mapping\\PatientProfile.cs",
+              "RelativeDocumentMoniker": "backend\\Features\\Patients\\Mapping\\PatientProfile.cs",
+              "ToolTip": "C:\\Users\\Envy\\Desktop\\.net GBG\\Project-3\\ClinicManagementSystem\\backend\\Features\\Patients\\Mapping\\PatientProfile.cs",
+              "RelativeToolTip": "backend\\Features\\Patients\\Mapping\\PatientProfile.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-14T23:06:10.52Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DoctorProfile.cs",
+              "DocumentMoniker": "C:\\Users\\Envy\\Desktop\\.net GBG\\Project-3\\ClinicManagementSystem\\backend\\Features\\Doctors\\Mapping\\DoctorProfile.cs",
+              "RelativeDocumentMoniker": "backend\\Features\\Doctors\\Mapping\\DoctorProfile.cs",
+              "ToolTip": "C:\\Users\\Envy\\Desktop\\.net GBG\\Project-3\\ClinicManagementSystem\\backend\\Features\\Doctors\\Mapping\\DoctorProfile.cs",
+              "RelativeToolTip": "backend\\Features\\Doctors\\Mapping\\DoctorProfile.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-14T23:05:40.685Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
