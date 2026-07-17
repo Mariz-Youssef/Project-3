@@ -1,12 +1,20 @@
+using ClinicManagementSystem.backend.Common.Extensions;
+
 namespace ClinicManagementSystem
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            //Configure the database services using the extension method
+            builder.Services.AddDatabaseServices(builder.Configuration);
+
+            //Configure the identity services using the extension method
+            builder.Services.AddIdentityServices();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -28,6 +36,9 @@ namespace ClinicManagementSystem
 
 
             app.MapControllers();
+
+            // Seed the database with initial data
+            await app.SeedDatabaseAsync();
 
             app.Run();
         }
