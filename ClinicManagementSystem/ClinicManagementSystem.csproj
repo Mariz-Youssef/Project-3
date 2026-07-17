@@ -11,21 +11,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="backend\Common\Constants\" />
-    <Folder Include="backend\Common\Helpers\" />
-    <Folder Include="backend\Common\Responses\" />
     <Folder Include="backend\Features\Appointments\DTOs\" />
     <Folder Include="backend\Features\Appointments\Repositories\" />
     <Folder Include="backend\Features\MedicalRecords\Controllers\" />
     <Folder Include="backend\Features\MedicalRecords\Repositories\" />
     <Folder Include="backend\Features\Patients\Controllers\" />
     <Folder Include="backend\Features\Patients\Repositories\" />
-    <Folder Include="backend\Middleware\" />
-    <Folder Include="backend\Filters\" />
     <Folder Include="backend\Features\Appointments\Interfaces\" />
     <Folder Include="backend\Features\Appointments\Services\" />
     <Folder Include="backend\Features\Appointments\Validators\" />
-    <Folder Include="backend\Common\Exceptions\" />
     <Folder Include="backend\Features\MedicalRecords\DTOs\" />
     <Folder Include="backend\Features\MedicalRecords\Interfaces\" />
     <Folder Include="backend\Features\MedicalRecords\Services\" />
@@ -34,9 +28,6 @@
     <Folder Include="backend\Features\Patients\Interfaces\" />
     <Folder Include="backend\Features\Patients\Services\" />
     <Folder Include="backend\Features\Patients\Validators\" />
-    <Folder Include="backend\Enums\" />
-    <Folder Include="backend\Models\" />
-    <Folder Include="frontend\" />
   </ItemGroup>
 
 </Project>
