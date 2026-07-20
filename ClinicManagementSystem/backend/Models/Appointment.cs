@@ -1,5 +1,4 @@
-﻿using ClinicManagementSystem.backend.Common;
-using ClinicManagementSystem.backend.Enums;
+﻿using ClinicManagementSystem.backend.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace ClinicManagementSystem.backend.Models

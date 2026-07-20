@@ -1,5 +1,4 @@
-﻿using ClinicManagementSystem.backend.Common;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ClinicManagementSystem.backend.Models
 {

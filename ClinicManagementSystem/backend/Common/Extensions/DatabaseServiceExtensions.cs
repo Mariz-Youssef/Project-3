@@ -1,4 +1,4 @@
-﻿using ClinicManagementSystem.backend.Common.Data;
+﻿using ClinicManagementSystem.backend.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinicManagementSystem.backend.Common.Extensions

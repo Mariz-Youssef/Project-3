@@ -1,4 +1,4 @@
-﻿using ClinicManagementSystem.backend.Common.Data.Seed;
+﻿using ClinicManagementSystem.backend.Data.Seed;
 
 namespace ClinicManagementSystem.backend.Common.Extensions
 {
