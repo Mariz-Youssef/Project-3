@@ -59,5 +59,9 @@ namespace ClinicManagementSystem.backend.Models
         /// This property is only populated when the user has the Patient role.
         /// </summary>
         public Patient? Patient { get; set; }
+        /// <summary>
+        /// Gets or sets the refresh tokens issued to this user.
+        /// </summary>
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     }
 }

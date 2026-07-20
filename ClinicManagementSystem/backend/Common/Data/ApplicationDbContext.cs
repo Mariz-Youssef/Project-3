@@ -28,6 +28,9 @@ namespace ClinicManagementSystem.backend.Common.Data
         public DbSet<DoctorWorkingHour> DoctorWorkingHours => Set<DoctorWorkingHour>();
         public DbSet<DoctorLeave> DoctorLeaves => Set<DoctorLeave>();
 
+        /// <summary>Gets the refresh tokens issued across the system.</summary>
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
