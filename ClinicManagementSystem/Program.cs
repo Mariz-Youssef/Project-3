@@ -16,6 +16,9 @@ namespace ClinicManagementSystem
             //Configure the identity services using the extension method
             builder.Services.AddIdentityServices();
 
+            //Configure feature application services
+            builder.Services.AddApplicationServices();
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
