@@ -1,4 +1,8 @@
 ﻿using ClinicManagementSystem.backend.Data;
+using ClinicManagementSystem.backend.Features.DepartmentFeature;
+using ClinicManagementSystem.backend.Features.DepartmentFeature.Interfaces;
+using ClinicManagementSystem.backend.Features.DepartmentFeature.Repositories;
+using ClinicManagementSystem.backend.Features.DepartmentFeature.Services;
 using ClinicManagementSystem.backend.Persistence.Interfaces;
 using ClinicManagementSystem.backend.Persistence.Repositories;
 
@@ -17,11 +21,16 @@ namespace ClinicManagementSystem.backend.Common.Extensions
             // Generic Repository
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-            // SaveChanges abstraction
-            services.AddScoped<ISaveChanges, ApplicationDbContext>();
+         
+
+            // AutoMapper
+            services.AddAutoMapper(typeof(DepartmentProfile).Assembly);
 
             // Register your application services here
-            // services.AddScoped<IDepartmentService, DepartmentService>();
+
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            services.AddScoped<IDepartmentService, DepartmentService>();
+
             // services.AddScoped<IDoctorService, DoctorService>();
             // services.AddScoped<IPatientService, PatientService>();
 
