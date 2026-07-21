@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClinicManagementSystem.backend.Features.DepartmentFeature.Interfaces;
 using ClinicManagementSystem.backend.Features.Doctors.DTOs.Requests;
 using ClinicManagementSystem.backend.Features.Doctors.DTOs.Responses;
 using ClinicManagementSystem.backend.Features.Doctors.Interfaces;
@@ -12,21 +13,18 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Services
     public class DoctorService: IDoctorService
     {
         private readonly IDoctorRepository _doctorRepository;
-        //private readonly IDepartmentRepository _departmentRepository;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IDepartmentRepository _departmentRepository;
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
         public DoctorService(
             IDoctorRepository doctorRepository,
-           // IDepartmentRepository departmentRepository,
-            UserManager<ApplicationUser> userManager,
+            IDepartmentRepository departmentRepository,
             IApplicationDbContext context,
             IMapper mapper)
         {
             _doctorRepository = doctorRepository;
-           // _departmentRepository = departmentRepository;
-            _userManager = userManager;
+            _departmentRepository = departmentRepository;
             _context = context;
             _mapper = mapper;
         }
@@ -49,10 +47,10 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Services
             // check if user exists
 
             // Check department exists
-            //if (!await _departmentRepository.ExistsAsync(request.DepartmentId,cancellationToken))
-            //{
-            //    throw new NotFoundException("Department not found.");
-            //}
+            if (!await _departmentRepository.ExistsAsync(request.DepartmentId, cancellationToken))
+            {
+                throw new Exception("Department not found.");
+            }
 
             // Check user isn't already a doctor
             if (await _doctorRepository.UserAlreadyAssignedAsync(
@@ -86,10 +84,10 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Services
             if (doctor == null)
                 throw new Exception("Doctor not found."); //not found exception
 
-            //if (!await _departmentRepository.ExistsAsync(request.DepartmentId,cancellationToken))
-            //{
-            //    throw new NotFoundException("Department not found.");
-            //}
+            if (!await _departmentRepository.ExistsAsync(request.DepartmentId, cancellationToken))
+            {
+                throw new Exception("Department not found."); //not found exception
+            }
 
             if (doctor.LicenseNumber != request.LicenseNumber &&
                 await _doctorRepository.LicenseExistsAsync(request.LicenseNumber,cancellationToken))
