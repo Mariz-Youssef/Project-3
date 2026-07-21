@@ -17,8 +17,13 @@ namespace ClinicManagementSystem
             //Configure the identity services using the extension method
             builder.Services.AddIdentityServices();
 
+            //AddSwagger service
+            builder.Services.AddApplicationSwagger();
+
             //Add application services and repositories using the extension method
             builder.Services.AddApplicationServices();
+
+
 
             builder.Services.AddControllers();
 
@@ -30,7 +35,8 @@ namespace ClinicManagementSystem
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+           
 
             var app = builder.Build();
 
@@ -49,13 +55,16 @@ namespace ClinicManagementSystem
             // Use the rate limiting middleware
             app.UseRateLimiter();
 
+            //Use Swagger
+            app.UseApplicationSwagger();
+
             app.UseAuthorization();
 
 
             app.MapControllers();
 
             // Seed the database with initial data
-            await app.SeedDatabaseAsync();
+          await app.SeedDatabaseAsync();
 
             app.Run();
         }

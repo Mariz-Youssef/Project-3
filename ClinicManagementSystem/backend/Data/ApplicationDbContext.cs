@@ -13,7 +13,7 @@ namespace ClinicManagementSystem.backend.Data
     /// Represents the application's database context.
     /// Manages Identity tables and business entities.
     /// </summary>
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>,ISaveChanges
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
        : base(options)
@@ -57,6 +57,8 @@ namespace ClinicManagementSystem.backend.Data
 
             return await base.SaveChangesAsync(cancellationToken);
         }
+
+      
 
         #endregion
 
