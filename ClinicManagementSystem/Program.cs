@@ -1,4 +1,9 @@
 using ClinicManagementSystem.backend.Common.Extensions;
+using ClinicManagementSystem.backend.Features.Doctors.DependencyInjection;
+using ClinicManagementSystem.backend.Features.Doctors.Interfaces;
+using ClinicManagementSystem.backend.Features.Doctors.Repositories;
+using ClinicManagementSystem.backend.Features.Doctors.Services;
+using ClinicManagementSystem.backend.Features.Doctors.Validators;
 
 namespace ClinicManagementSystem
 {
@@ -15,7 +20,9 @@ namespace ClinicManagementSystem
 
             //Configure the identity services using the extension method
             builder.Services.AddIdentityServices();
-            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services.AddMapping();
+            builder.Services.AddValidation();
+            builder.Services.AddDoctorFeature();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
