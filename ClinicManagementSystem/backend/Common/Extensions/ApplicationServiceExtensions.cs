@@ -1,6 +1,41 @@
-﻿namespace ClinicManagementSystem.backend.Common.Extensions
+﻿using ClinicManagementSystem.backend.Data;
+using ClinicManagementSystem.backend.Features.DepartmentFeature;
+using ClinicManagementSystem.backend.Features.DepartmentFeature.Interfaces;
+using ClinicManagementSystem.backend.Features.DepartmentFeature.Repositories;
+using ClinicManagementSystem.backend.Features.DepartmentFeature.Services;
+using ClinicManagementSystem.backend.Persistence.Interfaces;
+using ClinicManagementSystem.backend.Persistence.Repositories;
+
+namespace ClinicManagementSystem.backend.Common.Extensions
 {
-    public class ApplicationServiceExtensions
+    /// <summary>
+    /// Contains extension methods for registering application services and repositories.
+    /// </summary>
+    public static class ApplicationServiceExtensions
     {
+        /// <summary>
+        /// Registers application services and repositories.
+        /// </summary>
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        {
+            // Generic Repository
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+         
+
+            // AutoMapper
+            services.AddAutoMapper(typeof(DepartmentProfile).Assembly);
+
+            // Register your application services here
+
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            services.AddScoped<IDepartmentService, DepartmentService>();
+
+            // services.AddScoped<IDoctorService, DoctorService>();
+            // services.AddScoped<IPatientService, PatientService>();
+
+            return services;
+        }
+
     }
 }

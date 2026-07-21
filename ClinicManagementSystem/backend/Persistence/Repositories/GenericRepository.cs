@@ -16,6 +16,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>where TEnti
 {
     protected readonly ApplicationDbContext _context;
     protected readonly DbSet<TEntity> _dbSet;
+    public ApplicationDbContext Context => _context;
 
     public GenericRepository(ApplicationDbContext context)
     {
@@ -79,10 +80,13 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>where TEnti
 
     #region Write Operations
 
-    public async Task AddAsync(TEntity entity,CancellationToken cancellationToken = default)
+    public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         await _dbSet.AddAsync(entity, cancellationToken);
+
     }
+
+  
 
     public async Task AddRangeAsync(IEnumerable<TEntity> entities,CancellationToken cancellationToken = default)
     {
@@ -96,17 +100,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>where TEnti
 
     public void Delete(TEntity entity)
     {
-        if (entity is ISoftDeletable softDeletable)
-        {
-            softDeletable.IsDeleted = true;
-            softDeletable.DeletedAt = DateTime.UtcNow;
-
-            _dbSet.Update(entity);
-        }
-        else
-        {
-            _dbSet.Remove(entity);
-        }
+        _dbSet.Remove(entity);
     }
 
     public void DeleteRange(IEnumerable<TEntity> entities)
