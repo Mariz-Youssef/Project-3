@@ -96,17 +96,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>where TEnti
 
     public void Delete(TEntity entity)
     {
-        if (entity is ISoftDeletable softDeletable)
-        {
-            softDeletable.IsDeleted = true;
-            softDeletable.DeletedAt = DateTime.UtcNow;
-
-            _dbSet.Update(entity);
-        }
-        else
-        {
-            _dbSet.Remove(entity);
-        }
+        _dbSet.Remove(entity);
     }
 
     public void DeleteRange(IEnumerable<TEntity> entities)
