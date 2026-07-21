@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="backend\Common\Filtering\" />
     <Folder Include="backend\Features\Appointments\DTOs\" />
     <Folder Include="backend\Features\Appointments\Repositories\" />
     <Folder Include="backend\Features\MedicalRecords\Controllers\" />

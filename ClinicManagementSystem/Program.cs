@@ -1,4 +1,5 @@
 using ClinicManagementSystem.backend.Common.Extensions;
+using ClinicManagementSystem.backend.Common.RateLimiting;
 
 namespace ClinicManagementSystem
 {
@@ -16,7 +17,17 @@ namespace ClinicManagementSystem
             //Configure the identity services using the extension method
             builder.Services.AddIdentityServices();
 
+            //Add application services and repositories using the extension method
+            builder.Services.AddApplicationServices();
+
             builder.Services.AddControllers();
+
+            // Add global exception handling
+            builder.Services.AddGlobalExceptionHandling();
+
+            // Add rate limiting
+            builder.Services.AddApplicationRateLimiting();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -31,6 +42,12 @@ namespace ClinicManagementSystem
             }
 
             app.UseHttpsRedirection();
+
+            // Use the global exception handler middleware
+            app.UseExceptionHandler();
+
+            // Use the rate limiting middleware
+            app.UseRateLimiter();
 
             app.UseAuthorization();
 
