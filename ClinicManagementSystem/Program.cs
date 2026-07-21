@@ -1,5 +1,6 @@
 using ClinicManagementSystem.backend.Common.Extensions;
 using ClinicManagementSystem.backend.Common.RateLimiting;
+using ClinicManagementSystem.backend.Features.Doctors.DependencyInjection;
 
 namespace ClinicManagementSystem
 {
