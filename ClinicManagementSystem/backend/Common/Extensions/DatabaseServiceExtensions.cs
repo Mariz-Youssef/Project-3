@@ -1,4 +1,5 @@
 ﻿using ClinicManagementSystem.backend.Data;
+using ClinicManagementSystem.backend.Persistence.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinicManagementSystem.backend.Common.Extensions
@@ -21,6 +22,9 @@ namespace ClinicManagementSystem.backend.Common.Extensions
                 options.UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection"));
             });
+            services.AddScoped<IApplicationDbContext>(provider =>
+                 provider.GetRequiredService<ApplicationDbContext>());
+
 
             return services;
         }

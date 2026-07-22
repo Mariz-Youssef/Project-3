@@ -74,20 +74,9 @@ namespace ClinicManagementSystem.backend.Persistence.Interfaces
         /// </summary>
         Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Updates an existing entity.
-        /// </summary>
-        Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Deletes an entity.
-        /// </summary>
-        Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
-
-        /// <summary>
-        /// Deletes multiple entities.
-        /// </summary>
-        Task DeleteRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+        void Update(TEntity entity);
+        void Delete(TEntity entity);
+        void DeleteRange(IEnumerable<TEntity> entities);
 
         #endregion
     }

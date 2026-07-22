@@ -1,5 +1,6 @@
 ﻿using ClinicManagementSystem.backend.Interfaces;
 using ClinicManagementSystem.backend.Models;
+using ClinicManagementSystem.backend.Persistence.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ namespace ClinicManagementSystem.backend.Data
     /// Represents the application's database context.
     /// Manages Identity tables and business entities.
     /// </summary>
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>, IApplicationDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
        : base(options)
@@ -56,6 +57,8 @@ namespace ClinicManagementSystem.backend.Data
 
             return await base.SaveChangesAsync(cancellationToken);
         }
+
+      
 
         #endregion
 
