@@ -1,4 +1,5 @@
-﻿using ClinicManagementSystem.backend.Features.Authentication.DTOs;
+﻿using ClinicManagementSystem.backend.Common.Responses;
+using ClinicManagementSystem.backend.Features.Authentication.DTOs;
 
 namespace ClinicManagementSystem.backend.Features.Authentication.Interfaces
 {
@@ -9,15 +10,25 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Interfaces
     public interface IAuthService
     {
         /// <summary>
-        /// Registers a new user account and returns a token pair for immediate login.
+        /// Registers a new patient login identity (Users table + Patient role only).
+        /// The patient must complete their profile separately after logging in.
         /// </summary>
         /// <param name="request">The registration details.</param>
-        /// <param name="ipAddress">The client IP address, recorded against the issued refresh token.</param>
         /// <param name="cancellationToken">Token used to observe cancellation requests.</param>
-       
-        Task<AuthServiceResult<RegisterResponseDto>> RegisterAsync(
-    RegisterRequestDto request,
-    CancellationToken cancellationToken = default);
+        Task<ApiResponse<RegisterResponseDto>> RegisterPatientAsync(
+            RegisterRequestDto request,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Creates a new doctor login identity (Users table + Doctor role only).
+        /// Restricted to Admin callers. The Doctor profile (specialization, license,
+        /// department, etc.) must be completed separately via the Doctors feature.
+        /// </summary>
+        /// <param name="request">The doctor account details.</param>
+        /// <param name="cancellationToken">Token used to observe cancellation requests.</param>
+        Task<ApiResponse<DoctorAccountResponseDto>> CreateDoctorAccountAsync(
+            CreateDoctorAccountRequestDto request,
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Validates credentials and returns a token pair on success.
@@ -25,19 +36,18 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Interfaces
         /// <param name="request">The login credentials.</param>
         /// <param name="ipAddress">The client IP address, recorded against the issued refresh token.</param>
         /// <param name="cancellationToken">Token used to observe cancellation requests.</param>
-        Task<AuthServiceResult<AuthResponseDto>> LoginAsync(
+        Task<ApiResponse<AuthResponseDto>> LoginAsync(
             LoginRequestDto request,
             string? ipAddress,
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Validates a refresh token, rotates it (revokes the old, issues a new one),
-        /// and returns a fresh access/refresh token pair.
+        /// Validates a refresh token, rotates it, and returns a fresh token pair.
         /// </summary>
         /// <param name="refreshToken">The refresh token presented by the client.</param>
         /// <param name="ipAddress">The client IP address, recorded against the rotation.</param>
         /// <param name="cancellationToken">Token used to observe cancellation requests.</param>
-        Task<AuthServiceResult<AuthResponseDto>> RefreshTokenAsync(
+        Task<ApiResponse<AuthResponseDto>> RefreshTokenAsync(
             string refreshToken,
             string? ipAddress,
             CancellationToken cancellationToken = default);
@@ -48,37 +58,9 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Interfaces
         /// <param name="refreshToken">The refresh token to revoke.</param>
         /// <param name="ipAddress">The client IP address that requested the revocation.</param>
         /// <param name="cancellationToken">Token used to observe cancellation requests.</param>
-        Task<AuthServiceResult<bool>> RevokeTokenAsync(
+        Task<ApiResponse<bool>> RevokeTokenAsync(
             string refreshToken,
             string? ipAddress,
             CancellationToken cancellationToken = default);
-    }
-
-    /// <summary>
-    /// Lightweight result wrapper used within the Auth service layer,
-    /// decoupled from the HTTP response shape used by controllers.
-    /// </summary>
-    /// <typeparam name="T">The type of the result payload.</typeparam>
-    public class AuthServiceResult<T>
-    {
-        /// <summary>Gets a value indicating whether the operation succeeded.</summary>
-        public bool Success { get; init; }
-
-        /// <summary>Gets a human-readable message describing the result.</summary>
-        public string Message { get; init; } = string.Empty;
-
-        /// <summary>Gets the result payload, if any.</summary>
-        public T? Data { get; init; }
-
-        /// <summary>Gets a list of error details, if any.</summary>
-        public IList<string>? Errors { get; init; }
-
-        /// <summary>Creates a successful result.</summary>
-        public static AuthServiceResult<T> Ok(T data, string message = "Success") =>
-            new() { Success = true, Message = message, Data = data };
-
-        /// <summary>Creates a failed result.</summary>
-        public static AuthServiceResult<T> Fail(string message, IList<string>? errors = null) =>
-            new() { Success = false, Message = message, Errors = errors };
     }
 }

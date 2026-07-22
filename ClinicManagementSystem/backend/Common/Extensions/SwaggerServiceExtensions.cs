@@ -24,19 +24,16 @@ namespace ClinicManagementSystem.backend.Common.Extensions
                     Version = "v1"
                 });
 
-                // Defines the "Bearer" scheme shown as the Authorize button in Swagger UI.
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer",
+                    Type = SecuritySchemeType.Http,       // changed from ApiKey
+                    Scheme = "bearer",
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
                     Description = "Enter: Bearer {your JWT access token}"
                 });
 
-                // Applies the Bearer requirement globally so every endpoint
-                // shows the lock icon and accepts the token entered via Authorize.
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
@@ -52,7 +49,6 @@ namespace ClinicManagementSystem.backend.Common.Extensions
                     }
                 });
 
-                // Include XML comments (summary tags) in Swagger UI.
                 var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 if (File.Exists(xmlPath))
@@ -64,5 +60,11 @@ namespace ClinicManagementSystem.backend.Common.Extensions
             return services;
         }
     }
+        
+    
+    
 }
+
+
+
 

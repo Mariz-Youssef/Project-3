@@ -26,11 +26,5 @@ namespace ClinicManagementSystem.backend.Features.Authentication.DTOs
         [Required(ErrorMessage = "Password confirmation is required.")]
         [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
         public string ConfirmPassword { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the requested role. Only roles listed as self-registrable
-        /// (currently "Patient") are accepted; anything else is rejected by the service layer.
-        /// </summary>
-        public string Role { get; set; } = "Patient";
     }
 }

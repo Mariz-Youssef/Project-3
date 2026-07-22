@@ -1,4 +1,6 @@
-﻿namespace ClinicManagementSystem.backend.Common.Extensions
+﻿using ClinicManagementSystem.backend.Common.Constants;
+
+namespace ClinicManagementSystem.backend.Common.Extensions
 {
     /// <summary>
     /// Extension methods for registering role-based authorization policies.
@@ -15,12 +17,11 @@
         {
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-                options.AddPolicy("DoctorOnly", policy => policy.RequireRole("Doctor"));
-                options.AddPolicy("ReceptionistOnly", policy => policy.RequireRole("Receptionist"));
-                options.AddPolicy("PatientOnly", policy => policy.RequireRole("Patient"));
-                options.AddPolicy("AdminOrReceptionist", policy => policy.RequireRole("Admin", "Receptionist"));
-                options.AddPolicy("MedicalStaff", policy => policy.RequireRole("Admin", "Doctor"));
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole(RoleNames.Admin));
+                options.AddPolicy("DoctorOnly", policy => policy.RequireRole(RoleNames.Doctor));
+                options.AddPolicy("PatientOnly", policy => policy.RequireRole(RoleNames.Patient));
+                options.AddPolicy("AdminOrDoctor", policy =>
+                    policy.RequireRole(RoleNames.Admin, RoleNames.Doctor));
             });
 
             return services;

@@ -40,7 +40,7 @@ namespace ClinicManagementSystem.backend.Common.Data.Seed
 
             await AdminSeeder.SeedAsync(userManager);
 
-            await ReceptionistSeeder.SeedAsync(userManager);
+            //await ReceptionistSeeder.SeedAsync(userManager);
 
             await DoctorUserSeeder.SeedAsync(userManager);
 

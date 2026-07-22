@@ -1,4 +1,5 @@
 ﻿using ClinicManagementSystem.backend.Features.Authentication.Interfaces;
+using ClinicManagementSystem.backend.Features.Authentication.Repository;
 using ClinicManagementSystem.backend.Features.Authentication.Services;
 
 namespace ClinicManagementSystem.backend.Features.Authentication.Extensions
@@ -16,6 +17,7 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Extensions
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             return services;
         }
