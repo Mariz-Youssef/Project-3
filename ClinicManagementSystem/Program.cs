@@ -1,4 +1,6 @@
 using ClinicManagementSystem.backend.Common.Extensions;
+using ClinicManagementSystem.backend.Common.RateLimiting;
+using ClinicManagementSystem.backend.Features.Doctors.DependencyInjection;
 
 namespace ClinicManagementSystem
 {
@@ -21,13 +23,31 @@ namespace ClinicManagementSystem
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
             builder.Services.AddApplicationServices();
 
-
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
+            //AddSwagger service
+            builder.Services.AddApplicationSwagger();
             builder.Services.AddSwaggerServices();
 
-            builder.Services.AddSwaggerGen();
+
+            //Add application services and repositories using the extension method
+            builder.Services.AddApplicationServices();
+
+
+
+            //Configure feature application services
+            builder.Services.AddApplicationServices();
+
+            builder.Services.AddControllers();
+
+            // Add global exception handling
+            builder.Services.AddGlobalExceptionHandling();
+
+            // Add rate limiting
+            builder.Services.AddApplicationRateLimiting();
+
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+
+           
 
             var app = builder.Build();
 
@@ -42,13 +62,22 @@ namespace ClinicManagementSystem
             app.UseAuthentication();
 
 
+            // Use the global exception handler middleware
+            app.UseExceptionHandler();
+
+            // Use the rate limiting middleware
+            app.UseRateLimiter();
+
+            //Use Swagger
+            app.UseApplicationSwagger();
+
             app.UseAuthorization();
 
 
             app.MapControllers();
 
             // Seed the database with initial data
-            await app.SeedDatabaseAsync();
+          await app.SeedDatabaseAsync();
 
             app.Run();
         }

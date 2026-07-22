@@ -1,23 +1,47 @@
-﻿using ClinicManagementSystem.backend.Features.Authentication.Extensions;
+﻿using ClinicManagementSystem.backend.Data;
+using ClinicManagementSystem.backend.Features.DepartmentFeature;
+using ClinicManagementSystem.backend.Features.DepartmentFeature.Interfaces;
+using ClinicManagementSystem.backend.Features.DepartmentFeature.Repositories;
+using ClinicManagementSystem.backend.Features.DepartmentFeature.Services;
+using ClinicManagementSystem.backend.Features.Doctors.DependencyInjection;
+using ClinicManagementSystem.backend.Features.Patients.Interfaces;
+using ClinicManagementSystem.backend.Features.Patients.Repositories;
+using ClinicManagementSystem.backend.Features.Patients.Services;
+using ClinicManagementSystem.backend.Persistence.Interfaces;
+using ClinicManagementSystem.backend.Persistence.Repositories;
 
 namespace ClinicManagementSystem.backend.Common.Extensions
 {
     /// <summary>
-    /// Aggregates service registrations from every feature into a single call.
-    /// Each feature owns and maintains its own registration method; this class
-    /// only wires them together so Program.cs doesn't need to reference every
-    /// feature individually.
+    /// Contains extension methods for registering application services and repositories.
     /// </summary>
     public static class ApplicationServiceExtensions
     {
+        /// <summary>
+        /// Registers application services and repositories.
+        /// </summary>
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            // Generic Repository
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            // AutoMapper
+            services.AddMapping();
+            services.AddValidation();
+
+            // Register your application services here
+
             services.AddAuthFeatureServices();
-            // services.AddDoctorFeatureServices();
-            // services.AddPatientFeatureServices();
-            // add one line per feature as they're built
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            services.AddScoped<IDepartmentService, DepartmentService>();
+            services.AddAutoMapper(_ => { }, AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<IPatientRepository, PatientRepository>();
+            services.AddScoped<IPatientService, PatientService>();
+            services.AddDoctorFeature();
+
 
             return services;
         }
+
     }
 }

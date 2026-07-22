@@ -1,6 +1,4 @@
-﻿using ClinicManagementSystem.backend.Common;
-
-namespace ClinicManagementSystem.backend.Models
+﻿namespace ClinicManagementSystem.backend.Models
 {
     /// <summary>
     /// Represents a doctor's recurring weekly working schedule.

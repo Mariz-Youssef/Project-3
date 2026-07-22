@@ -1,5 +1,4 @@
-﻿using ClinicManagementSystem.backend.Common;
-using ClinicManagementSystem.backend.Enums;
+﻿using ClinicManagementSystem.backend.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace ClinicManagementSystem.backend.Models
@@ -58,6 +57,11 @@ namespace ClinicManagementSystem.backend.Models
         [Required(ErrorMessage = "Emergency contact phone number is required.")]
         [Phone(ErrorMessage = "Please enter a valid phone number.")]
         public string EmergencyContactPhone { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets additional medical notes for the patient.
+        /// </summary>
+        public string? MedicalNotes { get; set; }
 
         // ============================
         // Navigation Properties

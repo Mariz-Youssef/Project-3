@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace ClinicManagementSystem.backend.Common.Extensions
 {
@@ -16,6 +17,8 @@ namespace ClinicManagementSystem.backend.Common.Extensions
         /// <returns>The same service collection, for chaining.</returns>
         public static IServiceCollection AddSwaggerServices(this IServiceCollection services)
         {
+            services.AddEndpointsApiExplorer();
+
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
@@ -49,21 +52,42 @@ namespace ClinicManagementSystem.backend.Common.Extensions
                     }
                 });
 
-                var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                if (File.Exists(xmlPath))
-                {
-                    options.IncludeXmlComments(xmlPath);
-                }
+                string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+
+                string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
+                options.SupportNonNullableReferenceTypes();
+
             });
 
             return services;
         }
     }
-        
-    
-    
-}
+     /// <summary>
+        /// Enables Swagger middleware.
+        /// </summary>
+        public static WebApplication UseApplicationSwagger(
+            this WebApplication app)
+        {
+            app.UseSwagger();
+
+            app.UseSwaggerUI(options =>
+            {
+                options.DocumentTitle = "Clinic Management System API";
+
+                options.SwaggerEndpoint(
+                    "/swagger/v1/swagger.json",
+                    "Clinic Management System API v1");
+
+                options.DisplayRequestDuration();
+            });
+
+            return app;
+        }
+
+
+
+    }
 
 
 
