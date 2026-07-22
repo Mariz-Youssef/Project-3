@@ -1,4 +1,5 @@
 ﻿using ClinicManagementSystem.backend.Data;
+using ClinicManagementSystem.backend.Features.Authentication.Extensions;
 using ClinicManagementSystem.backend.Features.DepartmentFeature;
 using ClinicManagementSystem.backend.Features.DepartmentFeature.Interfaces;
 using ClinicManagementSystem.backend.Features.DepartmentFeature.Repositories;
@@ -31,6 +32,7 @@ namespace ClinicManagementSystem.backend.Common.Extensions
 
             // Register your application services here
 
+            services.AddAuthFeatureServices();
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddAutoMapper(_ => { }, AppDomain.CurrentDomain.GetAssemblies());

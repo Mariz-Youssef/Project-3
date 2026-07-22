@@ -1,4 +1,5 @@
-﻿using ClinicManagementSystem.backend.Models;
+﻿using ClinicManagementSystem.backend.Common.Constants;
+using ClinicManagementSystem.backend.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace ClinicManagementSystem.backend.Data.Seed.IdentitySeed
@@ -36,7 +37,7 @@ namespace ClinicManagementSystem.backend.Data.Seed.IdentitySeed
                     $"Failed to create administrator: {string.Join(", ", result.Errors.Select(e => e.Description))}");
             }
 
-            await userManager.AddToRoleAsync(admin, "Admin");
+            await userManager.AddToRoleAsync(admin, RoleNames.Admin);
         }
     }
 }

@@ -4,12 +4,18 @@ using System.Reflection;
 namespace ClinicManagementSystem.backend.Common.Extensions
 {
     /// <summary>
-    /// Provides extension methods for configuring Swagger/OpenAPI.
+    /// Extension methods for registering Swagger/OpenAPI, including
+    /// the JWT Bearer "Authorize" button used to test protected endpoints.
     /// </summary>
     public static class SwaggerServiceExtensions
     {
-        public static IServiceCollection AddApplicationSwagger(
-           this IServiceCollection services)
+        /// <summary>
+        /// Registers Swagger generation with a Bearer token security definition,
+        /// so protected endpoints can be tested directly from the Swagger UI.
+        /// </summary>
+        /// <param name="services">The service collection to add to.</param>
+        /// <returns>The same service collection, for chaining.</returns>
+        public static IServiceCollection AddSwaggerServices(this IServiceCollection services)
         {
             services.AddEndpointsApiExplorer();
 
@@ -18,19 +24,40 @@ namespace ClinicManagementSystem.backend.Common.Extensions
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Clinic Management System API",
-                    Version = "v1",
-                    Description = "REST API for managing clinic departments, doctors, patients, appointments, and medical records."
+                    Version = "v1"
                 });
 
-                string xmlFile =
-                    $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,       // changed from ApiKey
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter: Bearer {your JWT access token}"
+                });
 
-                string xmlPath =
-                    Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
 
+                string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+
+                string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 options.IncludeXmlComments(xmlPath);
-
                 options.SupportNonNullableReferenceTypes();
+
             });
 
             return services;
@@ -59,3 +86,11 @@ namespace ClinicManagementSystem.backend.Common.Extensions
         }
     }
 }
+
+
+
+    
+
+
+
+

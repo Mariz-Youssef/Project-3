@@ -17,9 +17,16 @@ namespace ClinicManagementSystem
 
             //Configure the identity services using the extension method
             builder.Services.AddIdentityServices();
+            builder.Services.AddAuthenticationServices(builder.Configuration);
+            builder.Services.AddAuthorizationServices();
+
+            builder.Services.AddAutoMapper(typeof(Program).Assembly);
+            builder.Services.AddApplicationServices();
 
             //AddSwagger service
-            builder.Services.AddApplicationSwagger();
+            //builder.Services.AddApplicationSwagger();
+            builder.Services.AddSwaggerServices();
+
 
             //Add application services and repositories using the extension method
             builder.Services.AddApplicationServices();
@@ -52,6 +59,8 @@ namespace ClinicManagementSystem
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
+
 
             // Use the global exception handler middleware
             app.UseExceptionHandler();
