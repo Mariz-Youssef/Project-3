@@ -18,7 +18,7 @@ public sealed class PatientsController : ControllerBase
     }
 
     [HttpPost("profile")]
-    [Authorize(Roles = "Patient")]
+    [AllowAnonymous]
     public async Task<IActionResult> CreatePatientProfile([FromBody] CreatePatientDto dto, CancellationToken cancellationToken = default)
     {
         var userId = GetUserIdFromClaims();
@@ -28,7 +28,7 @@ public sealed class PatientsController : ControllerBase
     }
 
     [HttpGet("profile")]
-    [Authorize(Roles = "Patient")]
+    [Authorize]
     public async Task<IActionResult> GetPatientProfile(CancellationToken cancellationToken = default)
     {
         var userId = GetUserIdFromClaims();
@@ -38,7 +38,7 @@ public sealed class PatientsController : ControllerBase
     }
 
     [HttpPut("profile")]
-    [Authorize(Roles = "Patient")]
+    [Authorize]
     public async Task<IActionResult> UpdatePatientProfile([FromBody] UpdatePatientDto dto, CancellationToken cancellationToken = default)
     {
         var userId = GetUserIdFromClaims();
@@ -48,7 +48,7 @@ public sealed class PatientsController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
-    [Authorize(Roles = "Admin,Doctor")]
+    [Authorize(Policy = "AdminOrDoctorPolicy")]
     public async Task<IActionResult> GetPatientById([FromRoute] int id, CancellationToken cancellationToken = default)
     {
         var patient = await _patientService.GetPatientByIdAsync(id, cancellationToken);
@@ -57,7 +57,7 @@ public sealed class PatientsController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<IActionResult> DeletePatient([FromRoute] int id, CancellationToken cancellationToken = default)
     {
         await _patientService.DeletePatientAsync(id, cancellationToken);
@@ -66,7 +66,7 @@ public sealed class PatientsController : ControllerBase
     }
 
     [HttpGet("search")]
-    [Authorize(Roles = "Admin,Doctor")]
+    [Authorize(Policy = "AdminOrDoctorPolicy")]
     public async Task<IActionResult> SearchPatients(
         [FromQuery] string searchTerm,
         [FromQuery] int pageNumber = 1,
