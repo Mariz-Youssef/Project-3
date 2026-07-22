@@ -29,6 +29,9 @@ namespace ClinicManagementSystem
 
 
 
+            //Configure feature application services
+            builder.Services.AddApplicationServices();
+
             builder.Services.AddControllers();
 
             // Add global exception handling

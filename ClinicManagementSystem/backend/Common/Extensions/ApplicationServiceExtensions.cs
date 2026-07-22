@@ -3,6 +3,9 @@ using ClinicManagementSystem.backend.Features.DepartmentFeature;
 using ClinicManagementSystem.backend.Features.DepartmentFeature.Interfaces;
 using ClinicManagementSystem.backend.Features.DepartmentFeature.Repositories;
 using ClinicManagementSystem.backend.Features.DepartmentFeature.Services;
+using ClinicManagementSystem.backend.Features.Patients.Interfaces;
+using ClinicManagementSystem.backend.Features.Patients.Repositories;
+using ClinicManagementSystem.backend.Features.Patients.Services;
 using ClinicManagementSystem.backend.Persistence.Interfaces;
 using ClinicManagementSystem.backend.Persistence.Repositories;
 
@@ -30,9 +33,10 @@ namespace ClinicManagementSystem.backend.Common.Extensions
 
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             services.AddScoped<IDepartmentService, DepartmentService>();
+            services.AddAutoMapper(_ => { }, AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<IPatientRepository, PatientRepository>();
+            services.AddScoped<IPatientService, PatientService>();
 
-            // services.AddScoped<IDoctorService, DoctorService>();
-            // services.AddScoped<IPatientService, PatientService>();
 
             return services;
         }

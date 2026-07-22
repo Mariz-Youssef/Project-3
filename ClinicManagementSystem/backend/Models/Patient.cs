@@ -58,6 +58,11 @@ namespace ClinicManagementSystem.backend.Models
         [Phone(ErrorMessage = "Please enter a valid phone number.")]
         public string EmergencyContactPhone { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Gets or sets additional medical notes for the patient.
+        /// </summary>
+        public string? MedicalNotes { get; set; }
+
         // ============================
         // Navigation Properties
         // ============================
