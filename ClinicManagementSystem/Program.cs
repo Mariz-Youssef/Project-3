@@ -1,5 +1,6 @@
 using ClinicManagementSystem.backend.Common.Extensions;
 using ClinicManagementSystem.backend.Common.RateLimiting;
+using ClinicManagementSystem.backend.Features.Doctors.DependencyInjection;
 
 namespace ClinicManagementSystem
 {
@@ -16,6 +17,9 @@ namespace ClinicManagementSystem
 
             //Configure the identity services using the extension method
             builder.Services.AddIdentityServices();
+            builder.Services.AddMapping();
+            builder.Services.AddValidation();
+            builder.Services.AddDoctorFeature();
 
             //AddSwagger service
             builder.Services.AddApplicationSwagger();

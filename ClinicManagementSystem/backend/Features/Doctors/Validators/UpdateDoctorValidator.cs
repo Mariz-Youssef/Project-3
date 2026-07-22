@@ -3,13 +3,10 @@ using FluentValidation;
 
 namespace ClinicManagementSystem.backend.Features.Doctors.Validators
 {
-    public class CreateDoctorValidator : AbstractValidator<CreateDoctorRequest>
+    public class UpdateDoctorValidator : AbstractValidator<UpdateDoctorRequest>
     {
-        public CreateDoctorValidator()
+        public UpdateDoctorValidator()
         {
-            RuleFor(x => x.UserId)
-            .GreaterThan(0);
-
             RuleFor(x => x.DepartmentId)
                 .GreaterThan(0);
 
@@ -27,5 +24,6 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Validators
             RuleFor(x => x.ConsultationFee)
                 .InclusiveBetween(0, 100000);
         }
+
     }
 }

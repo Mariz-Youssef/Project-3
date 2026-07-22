@@ -4,16 +4,14 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-
-	  <!-- Generate XML documentation -->
-	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-
-	  <!-- Suppress warnings for members without XML comments -->
-	  <NoWarn>$(NoWarn);1591</NoWarn>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.16">
       <PrivateAssets>all</PrivateAssets>
@@ -28,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="backend\Common\Filtering\" />
     <Folder Include="backend\Features\Appointments\DTOs\" />
     <Folder Include="backend\Features\Appointments\Repositories\" />
     <Folder Include="backend\Features\MedicalRecords\Controllers\" />
