@@ -62,8 +62,8 @@ namespace ClinicManagementSystem.backend.Common.Extensions
 
             return services;
         }
-    }
-     /// <summary>
+
+        /// <summary>
         /// Enables Swagger middleware.
         /// </summary>
         public static WebApplication UseApplicationSwagger(
@@ -84,10 +84,12 @@ namespace ClinicManagementSystem.backend.Common.Extensions
 
             return app;
         }
-
-
-
     }
+}
+
+
+
+    
 
 
 

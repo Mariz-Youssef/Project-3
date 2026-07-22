@@ -1,4 +1,4 @@
-﻿using ClinicManagementSystem.backend.Common.Data;
+﻿using ClinicManagementSystem.backend.Data;
 using ClinicManagementSystem.backend.Features.Authentication.Interfaces;
 using ClinicManagementSystem.backend.Models;
 using Microsoft.EntityFrameworkCore;

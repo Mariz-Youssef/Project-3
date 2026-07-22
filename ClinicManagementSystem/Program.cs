@@ -24,7 +24,7 @@ namespace ClinicManagementSystem
             builder.Services.AddApplicationServices();
 
             //AddSwagger service
-            builder.Services.AddApplicationSwagger();
+            //builder.Services.AddApplicationSwagger();
             builder.Services.AddSwaggerServices();
 
 

@@ -1,4 +1,5 @@
 ﻿using ClinicManagementSystem.backend.Data;
+using ClinicManagementSystem.backend.Features.Authentication.Extensions;
 using ClinicManagementSystem.backend.Features.DepartmentFeature;
 using ClinicManagementSystem.backend.Features.DepartmentFeature.Interfaces;
 using ClinicManagementSystem.backend.Features.DepartmentFeature.Repositories;
