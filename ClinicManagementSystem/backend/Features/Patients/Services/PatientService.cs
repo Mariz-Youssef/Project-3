@@ -57,7 +57,7 @@ public sealed class PatientService : IPatientService
 
         _mapper.Map(dto, patient);
 
-        await _repository.UpdateAsync(patient, cancellationToken);
+        _repository.Update(patient);
 
         var updatedPatient = await _repository.GetPatientProfileWithUserAsync(userId, cancellationToken)
             ?? throw new KeyNotFoundException("Patient profile was not found after update.");
@@ -70,7 +70,7 @@ public sealed class PatientService : IPatientService
         var patient = await _repository.GetByIdAsync(patientId, cancellationToken)
             ?? throw new KeyNotFoundException("Patient profile was not found.");
 
-        await _repository.DeleteAsync(patient, cancellationToken);
+        _repository.Delete(patient);
         return true;
     }
 
