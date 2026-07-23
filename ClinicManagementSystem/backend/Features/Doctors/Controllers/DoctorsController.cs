@@ -1,5 +1,7 @@
 ﻿using ClinicManagementSystem.backend.Common.Pagination;
+using ClinicManagementSystem.backend.Common.Responses;
 using ClinicManagementSystem.backend.Features.Doctors.DTOs.Requests;
+using ClinicManagementSystem.backend.Features.Doctors.DTOs.Responses;
 using ClinicManagementSystem.backend.Features.Doctors.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,7 +33,8 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         public async Task<IActionResult> GetAll([FromQuery] PaginationParameters pagination,CancellationToken cancellationToken)
         {
             var doctors = await _doctorService.GetAllAsync(pagination,cancellationToken);
-            return Ok(doctors);
+            return Ok(ApiResponse<PagedResult<DoctorResponse>>.SuccessResponse(doctors,"Doctors retrieved successfully."
+    ));
         }
         /// <summary>
         /// Retrieves a doctor by identifier.
@@ -45,7 +48,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         public async Task<IActionResult> GetById(int id,CancellationToken cancellationToken)
         {
             var doctor = await _doctorService.GetByIdAsync(id, cancellationToken);
-            return Ok(doctor);
+            return Ok(ApiResponse<DoctorResponse>.SuccessResponse(doctor,"Doctor retrieved successfully."));
         }
         /// <summary>
         /// Creates a new doctor.
@@ -59,7 +62,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         public async Task<IActionResult> Create(CreateDoctorRequest request,CancellationToken cancellationToken)
         {
             var doctor = await _doctorService.CreateAsync(request,cancellationToken);
-            return CreatedAtAction(nameof(GetById),new { id = doctor.Id },doctor);
+            return CreatedAtAction(nameof(GetById),new { id = doctor.Id },ApiResponse<DoctorResponse>.SuccessResponse(doctor,"Doctor created successfully."));
         }
         /// <summary>
         /// Updates an existing doctor.
@@ -78,7 +81,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
                 request,
                 cancellationToken);
 
-            return Ok(doctor);
+            return Ok(ApiResponse<DoctorResponse>.SuccessResponse(doctor,"Doctor updated successfully."));
         }
         /// <summary>
         /// Deletes a doctor.
@@ -92,7 +95,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         public async Task<IActionResult> Delete(int id,CancellationToken cancellationToken)
         {
             await _doctorService.DeleteAsync(id, cancellationToken);
-            return NoContent();
+            return Ok(ApiResponse<object>.SuccessResponse(null,"Doctor deleted successfully."));
         }
         /// <summary>
         /// Retrieves all doctors belonging to a specific department.
@@ -108,7 +111,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
                 pagination,
                 cancellationToken);
 
-            return Ok(doctors);
+            return Ok(ApiResponse<PagedResult<DoctorResponse>>.SuccessResponse(doctors,"Doctors retrieved successfully."));
         }
         /// <summary>
         /// Retrieves all doctors with a specific specialization.
@@ -124,7 +127,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
                 pagination,
                 cancellationToken);
 
-            return Ok(doctors);
+            return Ok(ApiResponse<PagedResult<DoctorResponse>>.SuccessResponse(doctors,"Doctors retrieved successfully."));
         }
     }
 }
