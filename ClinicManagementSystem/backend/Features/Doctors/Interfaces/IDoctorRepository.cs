@@ -6,11 +6,11 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Interfaces
 {
     public interface IDoctorRepository : IGenericRepository<Doctor>
     {
-        Task<bool> LicenseExistsAsync(string licenseNumber, CancellationToken cancellationToken = default);
-        Task<bool> UserAlreadyAssignedAsync(int userId, CancellationToken cancellationToken = default);
-        Task<IReadOnlyList<Doctor>> GetByDepartmentAsync(int departmentId, CancellationToken cancellationToken = default);
-        Task<IReadOnlyList<Doctor>> GetBySpecializationAsync(string specialization, CancellationToken cancellationToken = default);
+        IQueryable<Doctor> GetAllWithDetails();
+        IQueryable<Doctor> GetByDepartment(int departmentId);
+        IQueryable<Doctor> GetBySpecialization(string specialization);
         Task<Doctor?> GetByIdWithDetailsAsync(int id,CancellationToken cancellationToken = default);
-        Task<IReadOnlyList<Doctor>> GetAllWithDetailsAsync(CancellationToken cancellationToken = default);
+        Task<bool> LicenseExistsAsync(string licenseNumber,CancellationToken cancellationToken = default);
+        Task<bool> UserAlreadyAssignedAsync(int userId,CancellationToken cancellationToken = default);
     }
 }

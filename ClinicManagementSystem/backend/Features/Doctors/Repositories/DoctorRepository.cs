@@ -12,39 +12,30 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Repositories
         {
         }
 
-        public async Task<IReadOnlyList<Doctor>> GetAllWithDetailsAsync(CancellationToken cancellationToken = default)
+        public IQueryable<Doctor> GetAllWithDetails()
         {
-            return await Query()
-            .Include(d => d.User)
-            .Include(d => d.Department)
-            .ToListAsync(cancellationToken);
+            return Query()
+                .Include(d => d.User)
+                .Include(d => d.Department);
         }
 
-        public async Task<IReadOnlyList<Doctor>> GetByDepartmentAsync(int departmentId, CancellationToken cancellationToken = default)
+        public IQueryable<Doctor> GetByDepartment(int departmentId)
         {
-            return await Query()
-            .Include(d => d.User)
-            .Include(d => d.Department)
-            .Where(d => d.DepartmentId == departmentId)
-            .ToListAsync(cancellationToken);
+            return Query()
+                .Include(d => d.User)
+                .Include(d => d.Department)
+                .Where(d => d.DepartmentId == departmentId);
         }
 
-        public async Task<Doctor?> GetByIdWithDetailsAsync(int id, CancellationToken cancellationToken = default)
+
+        public IQueryable<Doctor> GetBySpecialization(string specialization)
         {
-            return await Query()
-            .Include(d => d.User)
-            .Include(d => d.Department)
-            .FirstOrDefaultAsync(d => d.Id == id,cancellationToken);
+            return Query()
+                .Include(d => d.User)
+                .Include(d => d.Department)
+                .Where(d => d.Specialization == specialization);
         }
 
-        public async Task<IReadOnlyList<Doctor>> GetBySpecializationAsync(string specialization, CancellationToken cancellationToken = default)
-        {
-            return await Query()
-            .Include(d => d.User)
-            .Include(d => d.Department)
-            .Where(d => d.Specialization == specialization)
-            .ToListAsync(cancellationToken);
-        }
 
         public async Task<bool> LicenseExistsAsync(string licenseNumber, CancellationToken cancellationToken = default)
         {
@@ -54,6 +45,13 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Repositories
         public async Task<bool> UserAlreadyAssignedAsync(int userId, CancellationToken cancellationToken = default)
         {
             return await Query().AnyAsync(d=>d.UserId== userId, cancellationToken);
+        }
+        public async Task<Doctor?> GetByIdWithDetailsAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await Query()
+                .Include(d => d.User)
+                .Include(d => d.Department)
+                .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
         }
     }
 }

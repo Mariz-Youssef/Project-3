@@ -1,4 +1,5 @@
-﻿using ClinicManagementSystem.backend.Features.Doctors.DTOs.Requests;
+﻿using ClinicManagementSystem.backend.Common.Pagination;
+using ClinicManagementSystem.backend.Features.Doctors.DTOs.Requests;
 using ClinicManagementSystem.backend.Features.Doctors.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,9 +28,9 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A list of all doctors.</returns>
         [HttpGet]
-        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAll([FromQuery] PaginationParameters pagination,CancellationToken cancellationToken)
         {
-            var doctors = await _doctorService.GetAllAsync(cancellationToken);
+            var doctors = await _doctorService.GetAllAsync(pagination,cancellationToken);
             return Ok(doctors);
         }
         /// <summary>
@@ -100,9 +101,13 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A list of doctors in the specified department.</returns>
         [HttpGet("department/{departmentId:int}")]
-        public async Task<IActionResult> GetByDepartment(int departmentId,CancellationToken cancellationToken)
+        public async Task<IActionResult> GetByDepartment(int departmentId,[FromQuery] PaginationParameters pagination,     CancellationToken cancellationToken)
         {
-            var doctors = await _doctorService.GetByDepartmentAsync(departmentId,cancellationToken);
+            var doctors = await _doctorService.GetByDepartmentAsync(
+                departmentId,
+                pagination,
+                cancellationToken);
+
             return Ok(doctors);
         }
         /// <summary>
@@ -112,10 +117,11 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A list of doctors with the specified specialization.</returns>
         [HttpGet("specialization/{specialization}")]
-        public async Task<IActionResult> GetBySpecialization(string specialization,CancellationToken cancellationToken)
+        public async Task<IActionResult> GetBySpecialization(string specialization,[FromQuery] PaginationParameters pagination,CancellationToken cancellationToken)
         {
             var doctors = await _doctorService.GetBySpecializationAsync(
                 specialization,
+                pagination,
                 cancellationToken);
 
             return Ok(doctors);

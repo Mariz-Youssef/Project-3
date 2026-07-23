@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using ClinicManagementSystem.backend.Common.Exceptions.CustomExceptions;
+using ClinicManagementSystem.backend.Common.Pagination;
+using ClinicManagementSystem.backend.Features.Authentication.Interfaces;
 using ClinicManagementSystem.backend.Features.DepartmentFeature.Interfaces;
 using ClinicManagementSystem.backend.Features.Doctors.DTOs.Requests;
 using ClinicManagementSystem.backend.Features.Doctors.DTOs.Responses;
@@ -16,6 +19,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Services
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IAuthService _userManager;
 
         public DoctorService(
             IDoctorRepository doctorRepository,
@@ -28,10 +32,18 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Services
             _context = context;
             _mapper = mapper;
         }
-        public async Task<IReadOnlyList<DoctorResponse>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<PagedResult<DoctorResponse>> GetAllAsync(PaginationParameters pagination,CancellationToken cancellationToken = default)
         {
-            var doctors = await _doctorRepository.GetAllWithDetailsAsync(cancellationToken);
-            return _mapper.Map<IReadOnlyList<DoctorResponse>>(doctors);
+            var query = _doctorRepository.GetAllWithDetails();
+            var pagedDoctors = await query.ToPagedResultAsync(
+                pagination,
+                cancellationToken);
+
+            return new PagedResult<DoctorResponse>
+            {
+                Items = _mapper.Map<IReadOnlyList<DoctorResponse>>(pagedDoctors.Items),
+                pagination = pagedDoctors.pagination
+            };
         }
         public async Task<DoctorResponse?> GetByIdAsync(int id,CancellationToken cancellationToken = default)
         {
@@ -45,6 +57,12 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Services
         public async Task<DoctorResponse> CreateAsync(CreateDoctorRequest request, CancellationToken cancellationToken = default)
         {
             // check if user exists
+           // var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+
+            //if (user == null)
+            //{
+            //    throw new NotFoundException("User not found.");
+            //}
 
             // Check department exists
             if (!await _departmentRepository.ExistsAsync(request.DepartmentId, cancellationToken))
@@ -117,16 +135,28 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Services
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<IReadOnlyList<DoctorResponse>> GetByDepartmentAsync(int departmentId,CancellationToken cancellationToken = default)
+        public async Task<PagedResult<DoctorResponse>> GetByDepartmentAsync(int departmentId, PaginationParameters pagination,CancellationToken cancellationToken = default)
         {
-            var doctors = await _doctorRepository.GetByDepartmentAsync(departmentId, cancellationToken);
-            return _mapper.Map<IReadOnlyList<DoctorResponse>>(doctors);
+            var query = _doctorRepository.GetByDepartment(departmentId);
+            var pagedDoctors = await query.ToPagedResultAsync(pagination,cancellationToken);
+
+            return new PagedResult<DoctorResponse>
+            {
+                Items = _mapper.Map<IReadOnlyList<DoctorResponse>>(pagedDoctors.Items),
+                pagination = pagedDoctors.pagination
+            };
         }
 
-        public async Task<IReadOnlyList<DoctorResponse>> GetBySpecializationAsync(string specialization,CancellationToken cancellationToken = default)
+        public async Task<PagedResult<DoctorResponse>> GetBySpecializationAsync(string specialization, PaginationParameters pagination,CancellationToken cancellationToken = default)
         {
-            var doctors = await _doctorRepository.GetBySpecializationAsync(specialization, cancellationToken);
-            return _mapper.Map<IReadOnlyList<DoctorResponse>>(doctors);
+            var query = _doctorRepository.GetBySpecialization(specialization);
+            var pagedDoctors = await query.ToPagedResultAsync(pagination,cancellationToken);
+
+            return new PagedResult<DoctorResponse>
+            {
+                Items = _mapper.Map<IReadOnlyList<DoctorResponse>>(pagedDoctors.Items),
+                pagination = pagedDoctors.pagination
+            };
         }
 
     }
