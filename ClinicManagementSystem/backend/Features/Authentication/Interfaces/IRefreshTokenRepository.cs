@@ -1,11 +1,12 @@
 ﻿using ClinicManagementSystem.backend.Models;
+using ClinicManagementSystem.backend.Persistence.Interfaces;
 
 namespace ClinicManagementSystem.backend.Features.Authentication.Interfaces
 {
     /// <summary>
     /// Provides data access for <see cref="RefreshToken"/> entities.
     /// </summary>
-    public interface IRefreshTokenRepository
+    public interface IRefreshTokenRepository : IGenericRepository<RefreshToken>
     {
         /// <summary>
         /// Retrieves a refresh token by its value, including the owning user.
@@ -14,12 +15,7 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Interfaces
         /// <param name="cancellationToken">Token used to observe cancellation requests.</param>
         Task<RefreshToken?> GetByTokenAsync(string token, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Adds a new refresh token.
-        /// </summary>
-        /// <param name="refreshToken">The refresh token to add.</param>
-        /// <param name="cancellationToken">Token used to observe cancellation requests.</param>
-        Task AddAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default);
+       
 
         /// <summary>
         /// Persists any pending changes to the data store.
