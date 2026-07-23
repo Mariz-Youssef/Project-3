@@ -21,11 +21,10 @@ namespace ClinicManagementSystem.backend.Features.DepartmentFeature.Services
 
         private readonly IMapper _mapper;
 
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
 
-        
 
-        public DepartmentService(IDepartmentRepository departmentRepository,ApplicationDbContext context, IMapper mapper)
+        public DepartmentService(IDepartmentRepository departmentRepository,IApplicationDbContext context, IMapper mapper)
         {
             _departmentRepository = departmentRepository;
             _context = context;
@@ -60,16 +59,6 @@ namespace ClinicManagementSystem.backend.Features.DepartmentFeature.Services
 
           await _context.SaveChangesAsync(cancellationToken);
 
-            //     ApplicationDbContext repositoryContext =
-            //((DepartmentRepository)_departmentRepository).Context;
-
-            //     ApplicationDbContext saveChangesContext =
-            //         (ApplicationDbContext)_saveChanges;
-
-            //     Console.WriteLine($"Repository Context: {repositoryContext.ContextId}");
-            //     Console.WriteLine($"SaveChanges Context: {saveChangesContext.ContextId}");
-
-            // Map the newly created department entity to the response DTO and return it
             return _mapper.Map<DepartmentResponseDto>(department);
 
         }
