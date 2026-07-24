@@ -62,7 +62,7 @@ namespace ClinicManagementSystem.backend.Features.Appointments.Controllers
         /// User is not authorized to view appointments.
         /// </response>
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpGet]
         [ProducesResponseType(typeof(ApiResponse<PagedResult<AppointmentResponseDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -94,7 +94,7 @@ namespace ClinicManagementSystem.backend.Features.Appointments.Controllers
         /// <response code="403">Forbidden.</response>
         /// <response code="404">Appointment not found.</response>
 
-        [Authorize(Roles = "Admin,Doctor,Patient")]
+        [Authorize]
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(ApiResponse<AppointmentDetailsResponseDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -127,7 +127,7 @@ namespace ClinicManagementSystem.backend.Features.Appointments.Controllers
         /// <response code="404">Doctor or patient profile not found.</response>
         /// <response code="409">Appointment conflict.</response>
 
-        [Authorize(Roles = "Patient")]
+        [Authorize(Policy = "PatientOnly")]
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponse<AppointmentResponseDto>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -164,7 +164,7 @@ namespace ClinicManagementSystem.backend.Features.Appointments.Controllers
         /// <response code="404">Appointment not found.</response>
         /// <response code="409">Appointment conflict.</response>
 
-        [Authorize(Roles = "Patient")]
+        [Authorize(Policy = "PatientOnly")]
         [HttpPut("{id:int}")]
         [ProducesResponseType(typeof(ApiResponse<AppointmentResponseDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -296,7 +296,7 @@ namespace ClinicManagementSystem.backend.Features.Appointments.Controllers
         /// <response code="403">Forbidden.</response>
         /// <response code="404">Appointment not found.</response>
         /// <response code="409">Completed appointments cannot be deleted.</response>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpDelete("{id:int}")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
