@@ -25,6 +25,7 @@ public sealed class PatientsController : ControllerBase
     /// <param name="patientService">
     /// Provides patient business operations.
     /// </param>
+    
     public PatientsController(IPatientService patientService)
     {
         _patientService = patientService;
@@ -42,7 +43,8 @@ public sealed class PatientsController : ControllerBase
     /// <returns>
     /// Returns a paginated collection of patients wrapped in a standardized API response.
     /// </returns>
-    //[Authorize(Roles = $"{RoleNames.Admin},{RoleNames.Doctor}")]
+    
+    [Authorize(Roles = $"{RoleNames.Admin},{RoleNames.Doctor}")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -66,7 +68,8 @@ public sealed class PatientsController : ControllerBase
     /// <returns>
     /// Returns the newly created patient profile wrapped in a standardized API response.
     /// </returns>
-    //[Authorize(Roles = RoleNames.Patient)]
+    
+    [Authorize(Roles = RoleNames.Patient)]
     [HttpPost("profile")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -93,7 +96,8 @@ public sealed class PatientsController : ControllerBase
     /// <returns>
     /// Returns the patient profile wrapped in a standardized API response.
     /// </returns>
-    //[Authorize(Roles = RoleNames.Patient)]
+    
+    [Authorize(Roles = RoleNames.Patient)]
     [HttpGet("profile")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -119,7 +123,8 @@ public sealed class PatientsController : ControllerBase
     /// <returns>
     /// Returns the updated patient profile wrapped in a standardized API response.
     /// </returns>
-    //[Authorize(Roles = RoleNames.Patient)]
+    
+    [Authorize(Roles = RoleNames.Patient)]
     [HttpPut("profile")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -146,7 +151,8 @@ public sealed class PatientsController : ControllerBase
     /// <returns>
     /// Returns the patient profile wrapped in a standardized API response.
     /// </returns>
-    //[Authorize(Roles = $"{RoleNames.Admin},{RoleNames.Doctor}")]
+    
+    [Authorize(Roles = $"{RoleNames.Admin},{RoleNames.Doctor}")]
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -172,7 +178,8 @@ public sealed class PatientsController : ControllerBase
     /// <returns>
     /// Returns a standardized success response.
     /// </returns>
-    //[Authorize(Roles = RoleNames.Admin)]
+   
+    [Authorize(Roles = RoleNames.Admin)]
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -201,7 +208,8 @@ public sealed class PatientsController : ControllerBase
     /// <returns>
     /// Returns the matching patient profiles wrapped in a standardized API response.
     /// </returns>
-    //[Authorize(Roles = $"{RoleNames.Admin},{RoleNames.Doctor}")]
+    
+    [Authorize(Roles = $"{RoleNames.Admin},{RoleNames.Doctor}")]
     [HttpGet("search")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
