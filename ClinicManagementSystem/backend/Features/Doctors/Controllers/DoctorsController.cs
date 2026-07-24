@@ -1,4 +1,5 @@
-﻿using ClinicManagementSystem.backend.Common.Pagination;
+﻿using ClinicManagementSystem.backend.Common.Constants;
+using ClinicManagementSystem.backend.Common.Pagination;
 using ClinicManagementSystem.backend.Common.Responses;
 using ClinicManagementSystem.backend.Features.Doctors.DTOs.Requests;
 using ClinicManagementSystem.backend.Features.Doctors.DTOs.Responses;
@@ -33,7 +34,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         public async Task<IActionResult> GetAll([FromQuery] PaginationParameters pagination,CancellationToken cancellationToken)
         {
             var doctors = await _doctorService.GetAllAsync(pagination,cancellationToken);
-            return Ok(ApiResponse<PagedResult<DoctorResponse>>.SuccessResponse(doctors,"Doctors retrieved successfully."));
+            return Ok(ApiResponseFactory.Success(doctors,doctors.pagination,"Doctor",ResponseAction.RetrievedList));
         }
         /// <summary>
         /// Retrieves a doctor by identifier.
@@ -50,7 +51,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         public async Task<IActionResult> GetById(int id,CancellationToken cancellationToken)
         {
             var doctor = await _doctorService.GetByIdAsync(id, cancellationToken);
-            return Ok(ApiResponse<DoctorResponse>.SuccessResponse(doctor,"Doctor retrieved successfully."));
+            return Ok(ApiResponseFactory.Success(doctor,"Doctor",ResponseAction.Retrieved));
         }
         /// <summary>
         /// Creates a new doctor.
@@ -71,7 +72,11 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         public async Task<IActionResult> Create(CreateDoctorRequest request,CancellationToken cancellationToken)
         {
             var doctor = await _doctorService.CreateAsync(request,cancellationToken);
-            return CreatedAtAction(nameof(GetById),new { id = doctor.Id },ApiResponse<DoctorResponse>.SuccessResponse(doctor,"Doctor created successfully."));
+            return CreatedAtAction(nameof(GetById),new { id = doctor.Id },
+                ApiResponseFactory.Success(
+                    doctor,
+                    "Doctor",
+                    ResponseAction.Created));
         }
         /// <summary>
         /// Updates an existing doctor.
@@ -93,7 +98,10 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         public async Task<IActionResult> Update(int id,UpdateDoctorRequest request,CancellationToken cancellationToken)
         {
             var doctor = await _doctorService.UpdateAsync(id,request,cancellationToken);
-            return Ok(ApiResponse<DoctorResponse>.SuccessResponse(doctor,"Doctor updated successfully."));
+            return Ok(ApiResponseFactory.Success(
+                    doctor,
+                    "Doctor",
+                    ResponseAction.Updated));
         }
         /// <summary>
         /// Deletes a doctor.
@@ -112,7 +120,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         public async Task<IActionResult> Delete(int id,CancellationToken cancellationToken)
         {
             await _doctorService.DeleteAsync(id, cancellationToken);
-            return Ok(ApiResponse<object>.SuccessResponse(null,"Doctor deleted successfully."));
+            return Ok(ApiResponseFactory.Success("Doctor",ResponseAction.Deleted));
         }
         /// <summary>
         /// Retrieves all doctors belonging to a specific department.
@@ -127,7 +135,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         public async Task<IActionResult> GetByDepartment(int departmentId,[FromQuery] PaginationParameters pagination,CancellationToken cancellationToken)
         {
             var doctors = await _doctorService.GetByDepartmentAsync(departmentId,pagination,cancellationToken);
-            return Ok(ApiResponse<PagedResult<DoctorResponse>>.SuccessResponse(doctors,"Doctors retrieved successfully."));
+            return Ok(ApiResponseFactory.Success(doctors,doctors.pagination,"Doctor",ResponseAction.RetrievedList));
         }
         /// <summary>
         /// Retrieves all doctors with a specific specialization.
@@ -141,7 +149,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         public async Task<IActionResult> GetBySpecialization(string specialization,[FromQuery] PaginationParameters pagination,CancellationToken cancellationToken)
         {
             var doctors = await _doctorService.GetBySpecializationAsync(specialization,pagination,cancellationToken);
-            return Ok(ApiResponse<PagedResult<DoctorResponse>>.SuccessResponse(doctors,"Doctors retrieved successfully."));
+            return Ok(ApiResponseFactory.Success(doctors,doctors.pagination,"Doctor",ResponseAction.RetrievedList));
         }
     }
 }

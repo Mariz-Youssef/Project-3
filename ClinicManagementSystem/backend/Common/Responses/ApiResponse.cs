@@ -49,11 +49,6 @@ namespace ClinicManagementSystem.backend.Common.Responses
         /// Only populated for paginated responses.
         /// </summary>
         public PaginationMetadata? Pagination { get; init; }
-        public static ApiResponse<T> SuccessResponse(T data, string message = "Success") =>
-            new() { Success = true, Message = message, Data = data };
-
-        /// <summary>Creates a failed response.</summary>
-        public static ApiResponse<T> FailureResponse(string message, IList<string>? errors = null) =>
-            new() { Success = false, Message = message, Errors = (IReadOnlyList<string>)errors };
+    
     }
 }

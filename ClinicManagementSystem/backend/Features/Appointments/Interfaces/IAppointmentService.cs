@@ -44,6 +44,12 @@ namespace ClinicManagementSystem.backend.Features.Appointments.Interfaces
         /// </summary>
         Task<bool> ExistsAsync(int appointmentId, CancellationToken cancellationToken = default);
 
+        //Task<AppointmentResponseDto> ConfirmAsync(int appointmentId,CancellationToken cancellationToken = default);
+
+        //Task<AppointmentResponseDto> CompleteAsync(int appointmentId,CancellationToken cancellationToken = default);
+
+        //Task<AppointmentResponseDto> CancelAsync(int appointmentId,CancellationToken cancellationToken = default);
+
 
 
 

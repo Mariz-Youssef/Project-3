@@ -1,4 +1,5 @@
-﻿using ClinicManagementSystem.backend.Common.Pagination;
+﻿using ClinicManagementSystem.backend.Common.Constants;
+using ClinicManagementSystem.backend.Common.Pagination;
 using ClinicManagementSystem.backend.Common.Responses;
 using ClinicManagementSystem.backend.Features.Doctors.DTOs.Leaves;
 using ClinicManagementSystem.backend.Features.Doctors.Interfaces;
@@ -34,7 +35,7 @@ public class DoctorLeavesController : ControllerBase
             pagination,
             cancellationToken);
 
-        return Ok(ApiResponse<PagedResult<LeaveResponse>>.SuccessResponse(result));
+        return Ok(ApiResponseFactory.Success(result,result.pagination,"Leave",ResponseAction.RetrievedList));
     }
 
     /// <summary>
@@ -48,7 +49,7 @@ public class DoctorLeavesController : ControllerBase
     {
         var result = await _leaveService.GetByIdAsync(doctorId,id, cancellationToken);
 
-        return Ok(ApiResponse<LeaveResponse>.SuccessResponse(result));
+        return Ok(ApiResponseFactory.Success(result,"Leave",ResponseAction.Retrieved));
     }
 
     /// <summary>
@@ -67,14 +68,17 @@ public class DoctorLeavesController : ControllerBase
     {
         var result = await _leaveService.CreateAsync(doctorId,request,cancellationToken);
 
-        return CreatedAtAction(
-            nameof(GetById),
+        return CreatedAtAction(nameof(GetById),
             new
             {
                 doctorId,
                 id = result.Id
             },
-            ApiResponse<LeaveResponse>.SuccessResponse(result));
+            ApiResponseFactory.Success(
+                result,
+                "Leave",
+                ResponseAction.Created));
+
     }
 
     /// <summary>
@@ -97,7 +101,7 @@ public class DoctorLeavesController : ControllerBase
             request,
             cancellationToken);
 
-        return Ok(ApiResponse<LeaveResponse>.SuccessResponse(result));
+        return Ok(ApiResponseFactory.Success(result,"Leave",ResponseAction.Updated));
     }
 
     /// <summary>
@@ -117,6 +121,6 @@ public class DoctorLeavesController : ControllerBase
             id,
             cancellationToken);
 
-        return Ok(ApiResponse<object>.SuccessResponse(null,"Leave deleted successfully."));
+        return Ok(ApiResponseFactory.Success("Leave",ResponseAction.Deleted));
     }
 }

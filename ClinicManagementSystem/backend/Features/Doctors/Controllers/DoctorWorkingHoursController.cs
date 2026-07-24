@@ -1,4 +1,5 @@
-﻿using ClinicManagementSystem.backend.Common.Pagination;
+﻿using ClinicManagementSystem.backend.Common.Constants;
+using ClinicManagementSystem.backend.Common.Pagination;
 using ClinicManagementSystem.backend.Common.Responses;
 using ClinicManagementSystem.backend.Features.Doctors.DTOs.WorkingHours;
 using ClinicManagementSystem.backend.Features.Doctors.Interfaces;
@@ -37,7 +38,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         {
             var result = await _workingHourService.GetByDoctorAsync(doctorId,pagination,cancellationToken);
 
-            return Ok(ApiResponse<PagedResult<WorkingHourResponse>>.SuccessResponse(result));
+            return Ok(ApiResponseFactory.Success(result,result.pagination,"Working Hour",ResponseAction.RetrievedList));
         }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         {
             var result = await _workingHourService.GetByIdAsync(id,cancellationToken);
 
-            return Ok(ApiResponse<WorkingHourResponse>.SuccessResponse(result));
+            return Ok(ApiResponseFactory.Success(result,"Working Hour",ResponseAction.Retrieved));
         }
 
         /// <summary>
@@ -79,13 +80,17 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
         {
             var result = await _workingHourService.CreateAsync(doctorId,request,cancellationToken);
 
-            return CreatedAtAction(nameof(GetById),
-                new
-                {
-                    doctorId,
-                    id = result.Id
-                },
-                ApiResponse<WorkingHourResponse>.SuccessResponse(result));
+                return CreatedAtAction(
+                    nameof(GetById),
+                    new
+                    {
+                        doctorId,
+                        id = result.Id
+                    },
+                    ApiResponseFactory.Success(
+                        result,
+                        "Working Hour",
+                        ResponseAction.Created));
         }
 
         /// <summary>
@@ -112,7 +117,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
                 request,
                 cancellationToken);
 
-            return Ok(ApiResponse<WorkingHourResponse>.SuccessResponse(result));
+            return Ok(ApiResponseFactory.Success(result,"Working Hour",ResponseAction.Updated));
         }
 
         /// <summary>
@@ -135,7 +140,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Controllers
                 id,
                 cancellationToken);
 
-            return Ok(ApiResponse<object>.SuccessResponse(null,"Working hour deleted successfully."));
+            return Ok(ApiResponseFactory.Success("Working Hour",ResponseAction.Deleted));
         }
     }
 }
