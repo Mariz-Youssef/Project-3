@@ -15,9 +15,11 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Interfaces
         /// <returns>The token string and its UTC expiration.</returns>
         (string Token, DateTime ExpiresAt) GenerateAccessToken(ApplicationUser user, IList<string> roles);
 
+        
         /// <summary>
         /// Generates a new cryptographically random refresh token value.
         /// </summary>
+        /// <returns>A URL-safe, base64-encoded random token string.</returns>
         string GenerateRefreshTokenValue();
     }
 }

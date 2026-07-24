@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using ClinicManagementSystem.backend.Common.Constants;
 using ClinicManagementSystem.backend.Common.Data;
+using ClinicManagementSystem.backend.Common.Exceptions.CustomExceptions;
 using ClinicManagementSystem.backend.Common.Responses;
 using ClinicManagementSystem.backend.Common.Settings;
+using ClinicManagementSystem.backend.Data;
 using ClinicManagementSystem.backend.Features.Authentication.DTOs;
 using ClinicManagementSystem.backend.Features.Authentication.Interfaces;
 using ClinicManagementSystem.backend.Models;
@@ -21,6 +23,7 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Services
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
         private readonly JwtSettings _jwtSettings;
+        private readonly ApplicationDbContext _context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthService"/> class.
@@ -30,215 +33,303 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Services
             IRefreshTokenRepository refreshTokenRepository,
             ITokenService tokenService,
             IMapper mapper,
-            IOptions<JwtSettings> jwtSettings)
+            IOptions<JwtSettings> jwtSettings,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _refreshTokenRepository = refreshTokenRepository;
             _tokenService = tokenService;
             _mapper = mapper;
             _jwtSettings = jwtSettings.Value;
+            _context = context;
         }
 
-        /// <inheritdoc />
-        public async Task<ApiResponse<RegisterResponseDto>> RegisterPatientAsync(
+       
+        /// <inheritdoc/>
+        public async Task<RegisterResponseDto> RegisterPatientAsync(
             RegisterRequestDto request,
             CancellationToken cancellationToken = default)
         {
-            // Note: UserManager does not expose CancellationToken overloads.
-            // This is a limitation of ASP.NET Core Identity's public API.
-            var existingUser = await _userManager.FindByEmailAsync(request.Email);
-            if (existingUser is not null)
-            {
-                return ApiResponse<RegisterResponseDto>.FailureResponse("A user with this email already exists.");
-            }
-
             var user = _mapper.Map<ApplicationUser>(request);
 
-            var createResult = await _userManager.CreateAsync(user, request.Password);
-            if (!createResult.Succeeded)
-            {
-                return ApiResponse<RegisterResponseDto>.FailureResponse(
-                    "Registration failed.",
-                    createResult.Errors.Select(e => e.Description).ToList());
-            }
+            await CreateUserAsync(
+                user,
+                request.Password,
+                RoleNames.Patient);
 
-            await _userManager.AddToRoleAsync(user, RoleNames.Patient);
-
-            var response = new RegisterResponseDto
+            return new RegisterResponseDto
             {
                 UserId = user.Id,
                 FullName = user.FullName,
                 Email = user.Email ?? string.Empty,
                 Role = RoleNames.Patient
             };
-
-            return ApiResponse<RegisterResponseDto>.SuccessResponse(
-                response,
-                "Registration successful. Please log in and complete your patient profile.");
         }
-
-        /// <inheritdoc />
-        public async Task<ApiResponse<DoctorAccountResponseDto>> CreateDoctorAccountAsync(
+        /// <inheritdoc/>
+        public async Task<DoctorAccountResponseDto> CreateDoctorAccountAsync(
             CreateDoctorAccountRequestDto request,
             CancellationToken cancellationToken = default)
         {
-            var existingUser = await _userManager.FindByEmailAsync(request.Email);
-            if (existingUser is not null)
-            {
-                return ApiResponse<DoctorAccountResponseDto>.FailureResponse("A user with this email already exists.");
-            }
-
             var user = _mapper.Map<ApplicationUser>(request);
 
-            var createResult = await _userManager.CreateAsync(user, request.Password);
-            if (!createResult.Succeeded)
-            {
-                return ApiResponse<DoctorAccountResponseDto>.FailureResponse(
-                    "Doctor account creation failed.",
-                    createResult.Errors.Select(e => e.Description).ToList());
-            }
+            await CreateUserAsync(
+                user,
+                request.Password,
+                RoleNames.Doctor);
 
-            await _userManager.AddToRoleAsync(user, RoleNames.Doctor);
-
-            var response = new DoctorAccountResponseDto
+            return new DoctorAccountResponseDto
             {
                 UserId = user.Id,
                 FullName = user.FullName,
                 Email = user.Email ?? string.Empty
             };
-
-            return ApiResponse<DoctorAccountResponseDto>.SuccessResponse(
-                response,
-                "Doctor account created. The doctor must log in and complete their profile.");
         }
-
-        /// <inheritdoc />
-        public async Task<ApiResponse<AuthResponseDto>> LoginAsync(
+        /// <inheritdoc/>
+        public async Task<AuthResponseDto> LoginAsync(
             LoginRequestDto request,
             string? ipAddress,
             CancellationToken cancellationToken = default)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
+
             if (user is null || user.IsDeleted)
             {
-                return ApiResponse<AuthResponseDto>.FailureResponse("Invalid email or password.");
+                throw new UnauthorizedException("Invalid email or password.");
             }
 
             if (await _userManager.IsLockedOutAsync(user))
             {
-                return ApiResponse<AuthResponseDto>.FailureResponse("Account is locked. Please try again later.");
+                throw new UnauthorizedException(
+                    "Your account is locked. Please try again later.");
             }
 
-            var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
+            var passwordValid =
+                await _userManager.CheckPasswordAsync(user, request.Password);
+
             if (!passwordValid)
             {
                 await _userManager.AccessFailedAsync(user);
-                return ApiResponse<AuthResponseDto>.FailureResponse("Invalid email or password.");
+
+                throw new UnauthorizedException("Invalid email or password.");
             }
 
             await _userManager.ResetAccessFailedCountAsync(user);
 
-            var authResponse = await GenerateAuthResponseAsync(user, ipAddress, cancellationToken);
-            return ApiResponse<AuthResponseDto>.SuccessResponse(authResponse, "Login successful.");
+            return await GenerateAuthResponseAsync(
+                user,
+                ipAddress,
+                cancellationToken);
         }
-
         /// <inheritdoc />
-        public async Task<ApiResponse<AuthResponseDto>> RefreshTokenAsync(
-            string refreshToken,
-            string? ipAddress,
-            CancellationToken cancellationToken = default)
+        public async Task<AuthResponseDto> RefreshTokenAsync(
+     string refreshToken,
+     string? ipAddress,
+     CancellationToken cancellationToken = default)
         {
-            var storedToken = await _refreshTokenRepository.GetByTokenAsync(refreshToken, cancellationToken);
+            var storedToken =
+                await _refreshTokenRepository.GetByTokenAsync(
+                    refreshToken,
+                    cancellationToken);
 
-            if (storedToken is null || !storedToken.IsActive)
+            if (storedToken is null)
             {
-                return ApiResponse<AuthResponseDto>.FailureResponse("Invalid or expired refresh token.");
+                throw new UnauthorizedException("Invalid refresh token.");
             }
 
-            // Rotate: revoke the presented token and chain it to its replacement.
-            storedToken.RevokedAt = DateTime.UtcNow;
-            storedToken.RevokedByIp = ipAddress;
-
-            var newRefreshTokenValue = _tokenService.GenerateRefreshTokenValue();
-            storedToken.ReplacedByToken = newRefreshTokenValue;
-
-            var newRefreshToken = new RefreshToken
+            if (storedToken.RevokedAt is not null)
             {
-                Token = newRefreshTokenValue,
-                UserId = storedToken.UserId,
-                CreatedByIp = ipAddress,
-                ExpiresAt = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationDays)
-            };
+                
+                await _refreshTokenRepository.RevokeDescendantsAsync(
+                    storedToken,
+                    ipAddress,
+                    cancellationToken);
 
-            await _refreshTokenRepository.AddAsync(newRefreshToken, cancellationToken);
-            await _refreshTokenRepository.SaveChangesAsync(cancellationToken);
+                await _refreshTokenRepository.SaveChangesAsync(cancellationToken);
 
-            var roles = await _userManager.GetRolesAsync(storedToken.User);
-            var (accessToken, accessTokenExpiresAt) = _tokenService.GenerateAccessToken(storedToken.User, roles);
+                throw new UnauthorizedException(
+                    "This refresh token has already been used. All sessions have been revoked for security.");
+            }
 
-            var response = _mapper.Map<AuthResponseDto>(storedToken.User);
-            response.Roles = roles;
-            response.AccessToken = accessToken;
-            response.AccessTokenExpiresAt = accessTokenExpiresAt;
-            response.RefreshToken = newRefreshTokenValue;
-            response.RefreshTokenExpiresAt = newRefreshToken.ExpiresAt;
-
-            return ApiResponse<AuthResponseDto>.SuccessResponse(response, "Token refreshed successfully.");
-        }
-
-        /// <inheritdoc />
-        public async Task<ApiResponse<bool>> RevokeTokenAsync(
-            string refreshToken,
-            string? ipAddress,
-            CancellationToken cancellationToken = default)
-        {
-            var storedToken = await _refreshTokenRepository.GetByTokenAsync(refreshToken, cancellationToken);
-
-            if (storedToken is null || !storedToken.IsActive)
+            if (storedToken.IsExpired)
             {
-                return ApiResponse<bool>.FailureResponse("Invalid or already revoked token.");
+                throw new UnauthorizedException("Refresh token has expired.");
             }
 
             storedToken.RevokedAt = DateTime.UtcNow;
             storedToken.RevokedByIp = ipAddress;
 
+            var replacementToken =
+                await CreateRefreshTokenAsync(
+                    storedToken.UserId,
+                    ipAddress,
+                    cancellationToken);
+
+            storedToken.ReplacedByToken = replacementToken.Token;
+
             await _refreshTokenRepository.SaveChangesAsync(cancellationToken);
 
-            return ApiResponse<bool>.SuccessResponse(true, "Token revoked successfully.");
+            return await BuildAuthResponseAsync(
+                storedToken.User,
+                replacementToken);
         }
+        /// <inheritdoc/>
+        public async Task RevokeTokenAsync(
+            string refreshToken,
+            string? ipAddress,
+            CancellationToken cancellationToken = default)
+        {
+            var storedToken = await _refreshTokenRepository
+                .GetByTokenAsync(refreshToken, cancellationToken);
+
+            if (storedToken is null || !storedToken.IsActive)
+            {
+                throw new UnauthorizedException(
+                    "Invalid or already revoked refresh token.");
+            }
+
+            storedToken.RevokedAt = DateTime.UtcNow;
+            storedToken.RevokedByIp = ipAddress;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            //await _refreshTokenRepository.SaveChangesAsync(cancellationToken);
+        }
+
+
+        /// <inheritdoc/>
+        public async Task ChangePasswordAsync(
+            int userId,
+            ChangePasswordRequestDto request,
+            CancellationToken cancellationToken = default)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user is null || user.IsDeleted)
+            {
+                throw new UnauthorizedException("Invalid user.");
+            }
+
+            var result = await _userManager.ChangePasswordAsync(
+                user,
+                request.CurrentPassword,
+                request.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                throw new ValidationException(
+                    result.Errors.Select(e => e.Description));
+            }
+            await _refreshTokenRepository.RevokeAllForUserAsync(userId, cancellationToken);
+        }
+
+
+
+
+
+
+
 
         /// <summary>
         /// Generates a new access/refresh token pair for the given user,
         /// persists the refresh token, and maps the result to <see cref="AuthResponseDto"/>.
         /// </summary>
         private async Task<AuthResponseDto> GenerateAuthResponseAsync(
-            ApplicationUser user,
-            string? ipAddress,
-            CancellationToken cancellationToken)
+   ApplicationUser user,
+   string? ipAddress,
+   CancellationToken cancellationToken)
         {
-            var roles = await _userManager.GetRolesAsync(user);
-            var (accessToken, accessTokenExpiresAt) = _tokenService.GenerateAccessToken(user, roles);
-            var refreshTokenValue = _tokenService.GenerateRefreshTokenValue();
+            var refreshToken =
+                await CreateRefreshTokenAsync(
+                    user.Id,
+                    ipAddress,
+                    cancellationToken);
 
-            var refreshToken = new RefreshToken
-            {
-                Token = refreshTokenValue,
-                UserId = user.Id,
-                CreatedByIp = ipAddress,
-                ExpiresAt = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationDays)
-            };
-
-            await _refreshTokenRepository.AddAsync(refreshToken, cancellationToken);
             await _refreshTokenRepository.SaveChangesAsync(cancellationToken);
 
+            return await BuildAuthResponseAsync(
+                user,
+                refreshToken);
+        }
+
+        private async Task<AuthResponseDto> BuildAuthResponseAsync(
+     ApplicationUser user,
+     RefreshToken refreshToken)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var (accessToken, expiresAt) =
+                _tokenService.GenerateAccessToken(user, roles);
+
             var response = _mapper.Map<AuthResponseDto>(user);
+
             response.Roles = roles;
             response.AccessToken = accessToken;
-            response.AccessTokenExpiresAt = accessTokenExpiresAt;
-            response.RefreshToken = refreshTokenValue;
+            response.AccessTokenExpiresAt = expiresAt;
+            response.RefreshToken = refreshToken.Token;
             response.RefreshTokenExpiresAt = refreshToken.ExpiresAt;
 
             return response;
         }
+
+
+        private async Task<RefreshToken> CreateRefreshTokenAsync(
+    int userId,
+    string? ipAddress,
+    CancellationToken cancellationToken)
+        {
+            var refreshToken = new RefreshToken
+            {
+                Token = _tokenService.GenerateRefreshTokenValue(),
+                UserId = userId,
+                CreatedByIp = ipAddress,
+                ExpiresAt = DateTime.UtcNow.AddDays(
+                    _jwtSettings.RefreshTokenExpirationDays)
+            };
+
+            await _refreshTokenRepository.AddAsync(
+                refreshToken,
+                cancellationToken);
+
+            return refreshToken;
+        }
+
+
+        /// <summary>
+        /// Creates a new Identity user and assigns the specified role.
+        /// </summary>
+        private async Task CreateUserAsync(
+     ApplicationUser user,
+     string password,
+     string role)
+        {
+            var existingUser = await _userManager.FindByEmailAsync(user.Email!);
+
+            if (existingUser is not null)
+            {
+                throw new ConflictException(
+                    ResponseMessageBuilder.AlreadyExists("User"));
+            }
+
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            var createResult = await _userManager.CreateAsync(user, password);
+
+            if (!createResult.Succeeded)
+            {
+                throw new ValidationException(
+                    createResult.Errors.Select(e => e.Description));
+            }
+
+            var roleResult = await _userManager.AddToRoleAsync(user, role);
+
+            if (!roleResult.Succeeded)
+            {
+                throw new ValidationException(
+                    roleResult.Errors.Select(e => e.Description));
+            }
+
+            await transaction.CommitAsync();
+        }
+
+
     }
 }
