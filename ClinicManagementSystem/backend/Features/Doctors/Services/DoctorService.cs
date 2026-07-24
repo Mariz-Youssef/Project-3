@@ -50,7 +50,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Services
             var doctor = await _doctorRepository.GetByIdWithDetailsAsync(id, cancellationToken);
 
             if (doctor == null)
-                throw new Exception("Doctor not found"); //Not found exception
+                throw new NotFoundException("Doctor not found"); 
 
             return _mapper.Map<DoctorResponse>(doctor);
         }
@@ -67,23 +67,19 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Services
             // Check department exists
             if (!await _departmentRepository.ExistsAsync(request.DepartmentId, cancellationToken))
             {
-                throw new Exception("Department not found.");
+                throw new NotFoundException("Department not found.");
             }
 
             // Check user isn't already a doctor
-            if (await _doctorRepository.UserAlreadyAssignedAsync(
-                    request.UserId,
-                    cancellationToken))
+            if (await _doctorRepository.UserAlreadyAssignedAsync(request.UserId,cancellationToken))
             {
-                throw new Exception("This user is already assigned to a doctor."); // bad request
+                throw new ConflictException("This user is already assigned to a doctor."); 
             }
 
             // Check license uniqueness
-            if (await _doctorRepository.LicenseExistsAsync(
-                    request.LicenseNumber,
-                    cancellationToken))
+            if (await _doctorRepository.LicenseExistsAsync(request.LicenseNumber,cancellationToken))
             {
-                throw new Exception("License number already exists.");
+                throw new ConflictException("License number already exists.");
             }
 
             var doctor = _mapper.Map<Doctor>(request);
@@ -96,40 +92,36 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Services
         }
         public async Task<DoctorResponse> UpdateAsync(int id,UpdateDoctorRequest request,CancellationToken cancellationToken = default)
         {
-            var doctor = await _doctorRepository
-                .GetByIdAsync(id, cancellationToken);
+            var doctor = await _doctorRepository.GetByIdAsync(id, cancellationToken);
 
             if (doctor == null)
-                throw new Exception("Doctor not found."); //not found exception
+                throw new NotFoundException("Doctor not found."); 
 
             if (!await _departmentRepository.ExistsAsync(request.DepartmentId, cancellationToken))
             {
-                throw new Exception("Department not found."); //not found exception
+                throw new NotFoundException("Department not found."); 
             }
 
             if (doctor.LicenseNumber != request.LicenseNumber &&
                 await _doctorRepository.LicenseExistsAsync(request.LicenseNumber,cancellationToken))
             {
-                throw new Exception("License number already exists."); //bad req
+                throw new ConflictException("License number already exists."); 
             }
 
             _mapper.Map(request, doctor);
             _doctorRepository.Update(doctor);
 
             await _context.SaveChangesAsync(cancellationToken);
-
             var updatedDoctor = await _doctorRepository.GetByIdWithDetailsAsync(id, cancellationToken);
-
             return _mapper.Map<DoctorResponse>(updatedDoctor);
         }
 
         public async Task DeleteAsync(int id,CancellationToken cancellationToken = default)
         {
-            var doctor = await _doctorRepository
-                .GetByIdAsync(id, cancellationToken);
+            var doctor = await _doctorRepository.GetByIdAsync(id, cancellationToken);
 
             if (doctor == null)
-                throw new Exception("Doctor not found."); //not found
+                throw new NotFoundException("Doctor not found."); 
 
             _doctorRepository.Delete(doctor);
             await _context.SaveChangesAsync(cancellationToken);

@@ -1,6 +1,7 @@
 using ClinicManagementSystem.backend.Common.Extensions;
 using ClinicManagementSystem.backend.Common.RateLimiting;
 using ClinicManagementSystem.backend.Features.Doctors.DependencyInjection;
+using System.Text.Json.Serialization;
 
 namespace ClinicManagementSystem
 {
@@ -36,7 +37,11 @@ namespace ClinicManagementSystem
             //Configure feature application services
             builder.Services.AddApplicationServices();
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(
+                    new JsonStringEnumConverter());
+            });
 
             // Add global exception handling
             builder.Services.AddGlobalExceptionHandling();
