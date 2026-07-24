@@ -19,18 +19,20 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Services
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IAuthService _userManager;
+        private readonly IUserService _userService;
 
         public DoctorService(
             IDoctorRepository doctorRepository,
             IDepartmentRepository departmentRepository,
             IApplicationDbContext context,
+            IUserService userService,
             IMapper mapper)
         {
             _doctorRepository = doctorRepository;
             _departmentRepository = departmentRepository;
             _context = context;
             _mapper = mapper;
+            _userService = userService;
         }
         public async Task<PagedResult<DoctorResponse>> GetAllAsync(PaginationParameters pagination,CancellationToken cancellationToken = default)
         {
@@ -57,12 +59,10 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Services
         public async Task<DoctorResponse> CreateAsync(CreateDoctorRequest request, CancellationToken cancellationToken = default)
         {
             // check if user exists
-           // var user = await _userManager.FindByIdAsync(request.UserId.ToString());
-
-            //if (user == null)
-            //{
-            //    throw new NotFoundException("User not found.");
-            //}
+            if (!await _userService.ExistsAsync(request.UserId, cancellationToken))
+            {
+                throw new NotFoundException("User not found.");
+            }
 
             // Check department exists
             if (!await _departmentRepository.ExistsAsync(request.DepartmentId, cancellationToken))
