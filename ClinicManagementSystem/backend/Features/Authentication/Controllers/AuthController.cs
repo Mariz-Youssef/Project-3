@@ -35,8 +35,8 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Controllers
         /// <response code="400">Validation failed or the email is already in use.</response>
         [HttpPost("register")]
         [AllowAnonymous]
-        //[ProducesResponseType(typeof(ApiResponse<RegisterResponseDto>), StatusCodes.Status200OK)]
-        //[ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<RegisterResponseDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ApiResponse<RegisterResponseDto>>> Register(
             [FromBody] RegisterRequestDto request,
             CancellationToken cancellationToken)
