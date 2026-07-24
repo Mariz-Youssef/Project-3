@@ -31,5 +31,13 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Repositories
                 x.DayOfWeek == day &&
                 (!excludeId.HasValue || x.Id != excludeId.Value),cancellationToken);
         }
+
+        public async Task<DoctorWorkingHour?> GetWorkingHoursAsync(int doctorId, DayOfWeek dayOfWeek, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .FirstOrDefaultAsync(
+                    x => x.DoctorId == doctorId && x.DayOfWeek == dayOfWeek, cancellationToken);
+        }
     }
 }

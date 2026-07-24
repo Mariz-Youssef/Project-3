@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="backend\Features\Appointments\Validators\**" />
+    <Content Remove="backend\Features\Appointments\Validators\**" />
+    <EmbeddedResource Remove="backend\Features\Appointments\Validators\**" />
+    <None Remove="backend\Features\Appointments\Validators\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
@@ -27,15 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="backend\Features\Appointments\DTOs\" />
-    <Folder Include="backend\Features\Appointments\Repositories\" />
     <Folder Include="backend\Features\MedicalRecords\Controllers\" />
     <Folder Include="backend\Features\MedicalRecords\Repositories\" />
     <Folder Include="backend\Features\Patients\Controllers\" />
     <Folder Include="backend\Features\Patients\Repositories\" />
-    <Folder Include="backend\Features\Appointments\Interfaces\" />
-    <Folder Include="backend\Features\Appointments\Services\" />
-    <Folder Include="backend\Features\Appointments\Validators\" />
     <Folder Include="backend\Features\MedicalRecords\DTOs\" />
     <Folder Include="backend\Features\MedicalRecords\Interfaces\" />
     <Folder Include="backend\Features\MedicalRecords\Services\" />

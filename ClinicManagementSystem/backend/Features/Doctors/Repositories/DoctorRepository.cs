@@ -53,5 +53,15 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Repositories
                 .Include(d => d.Department)
                 .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
         }
+
+        public async Task<Doctor?> GetDoctorForAppointmentAsync(int doctorId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Doctors
+                .Include(d => d.User)
+                .Include(d => d.Department)
+                .FirstOrDefaultAsync(
+                    d => d.Id == doctorId,
+                    cancellationToken);
+        }
     }
 }
