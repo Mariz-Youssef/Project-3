@@ -1,0 +1,28 @@
+.empty-state {
+  text-align: center;
+  padding: var(--space-6) var(--space-4);
+  color: var(--color-slate);
+}
+
+.empty-state__mark {
+  width: 36px;
+  height: 36px;
+  margin: 0 auto var(--space-3);
+  border-radius: 10px;
+  background: var(--color-mint-tint);
+  border: 1px dashed var(--color-mint-dark);
+}
+
+.empty-state__title {
+  font-size: 15px;
+  color: var(--color-ink);
+}
+
+.empty-state__message {
+  font-size: 13px;
+  margin-top: var(--space-1);
+}
+
+.empty-state__action {
+  margin-top: var(--space-4);
+}
