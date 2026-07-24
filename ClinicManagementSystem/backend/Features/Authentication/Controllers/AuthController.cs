@@ -1,4 +1,6 @@
-﻿using ClinicManagementSystem.backend.Common.Responses;
+﻿using ClinicManagementSystem.backend.Common.Constants;
+using ClinicManagementSystem.backend.Common.Extensions;
+using ClinicManagementSystem.backend.Common.Responses;
 using ClinicManagementSystem.backend.Features.Authentication.DTOs;
 using ClinicManagementSystem.backend.Features.Authentication.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -38,12 +40,18 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Controllers
         [ProducesResponseType(typeof(ApiResponse<RegisterResponseDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ApiResponse<RegisterResponseDto>>> Register(
-            [FromBody] RegisterRequestDto request,
-            CancellationToken cancellationToken)
+     RegisterRequestDto request,
+     CancellationToken cancellationToken)
         {
-            var result = await _authService.RegisterPatientAsync(request, cancellationToken);
+            var result = await _authService.RegisterPatientAsync(
+                request,
+                cancellationToken);
 
-            return result.Success ? Ok(result) : BadRequest(result);
+            return Ok(
+                ApiResponseFactory.Success(
+                    result,
+                    "Patient account",
+                    ResponseAction.Created));
         }
 
         /// <summary>
@@ -58,19 +66,21 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Controllers
         /// <response code="403">The caller is authenticated but is not an Admin.</response>
         [HttpPost("create-doctor-account")]
         [Authorize(Policy = "AdminOnly")]
-        [ProducesResponseType(typeof(ApiResponse<DoctorAccountResponseDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<ApiResponse<DoctorAccountResponseDto>>> CreateDoctorAccount(
-            [FromBody] CreateDoctorAccountRequestDto request,
-            CancellationToken cancellationToken)
+     CreateDoctorAccountRequestDto request,
+     CancellationToken cancellationToken)
         {
-            var result = await _authService.CreateDoctorAccountAsync(request, cancellationToken);
+            var result =
+                await _authService.CreateDoctorAccountAsync(
+                    request,
+                    cancellationToken);
 
-            return result.Success ? Ok(result) : BadRequest(result);
+            return Ok(
+                ApiResponseFactory.Success(
+                    result,
+                    "Doctor account",
+                    ResponseAction.Created));
         }
-
         /// <summary>
         /// Authenticates a user with email and password.
         /// </summary>
@@ -80,15 +90,21 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Controllers
         /// <response code="401">Invalid credentials or the account is locked out.</response>
         [HttpPost("login")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(ApiResponse<AuthResponseDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<ApiResponse<AuthResponseDto>>> Login(
-            [FromBody] LoginRequestDto request,
-            CancellationToken cancellationToken)
+     LoginRequestDto request,
+     CancellationToken cancellationToken)
         {
-            var result = await _authService.LoginAsync(request, GetClientIp(), cancellationToken);
+            var result =
+                await _authService.LoginAsync(
+                    request,
+                    GetClientIp(),
+                    cancellationToken);
 
-            return result.Success ? Ok(result) : Unauthorized(result);
+            return Ok(
+                ApiResponseFactory.Success(
+                    result,
+                    "Authentication",
+                    ResponseAction.Retrieved));
         }
 
         /// <summary>
@@ -101,17 +117,22 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Controllers
         /// <response code="401">The refresh token is invalid, expired, or already used.</response>
         [HttpPost("refresh-token")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(ApiResponse<AuthResponseDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<ApiResponse<AuthResponseDto>>> RefreshToken(
-            [FromBody] RefreshTokenRequestDto request,
-            CancellationToken cancellationToken)
+    RefreshTokenRequestDto request,
+    CancellationToken cancellationToken)
         {
-            var result = await _authService.RefreshTokenAsync(request.RefreshToken, GetClientIp(), cancellationToken);
+            var result =
+                await _authService.RefreshTokenAsync(
+                    request.RefreshToken,
+                    GetClientIp(),
+                    cancellationToken);
 
-            return result.Success ? Ok(result) : Unauthorized(result);
+            return Ok(
+                ApiResponseFactory.Success(
+                    result,
+                    "Authentication",
+                    ResponseAction.Retrieved));
         }
-
         /// <summary>
         /// Revokes a refresh token, effectively logging out the device that holds it.
         /// Requires an authenticated caller.
@@ -119,22 +140,51 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Controllers
         /// <param name="request">The refresh token to revoke.</param>
         /// <param name="cancellationToken">Token used to observe request cancellation.</param>
         /// <response code="200">The token was revoked successfully.</response>
-        /// <response code="400">The token is invalid or already revoked.</response>
-        /// <response code="401">The caller is not authenticated.</response>
+        /// <response code="401">The token is invalid or already revoked.</response>
         [HttpPost("revoke-token")]
         [Authorize]
-        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<ApiResponse<bool>>> RevokeToken(
-            [FromBody] RefreshTokenRequestDto request,
-            CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiResponse<object>>> RevokeToken(
+     RefreshTokenRequestDto request,
+     CancellationToken cancellationToken)
         {
-            var result = await _authService.RevokeTokenAsync(request.RefreshToken, GetClientIp(), cancellationToken);
+            await _authService.RevokeTokenAsync(
+                request.RefreshToken,
+                GetClientIp(),
+                cancellationToken);
 
-            return result.Success ? Ok(result) : BadRequest(result);
+
+            return Ok(
+                ApiResponseFactory.Success(
+                    "Refresh token",
+                    ResponseAction.Deleted));
         }
 
+
+        /// <summary>
+        /// Changes the authenticated user's password. Requires the current
+        /// password for verification.
+        /// </summary>
+        /// <param name="request">The current and new password details.</param>
+        /// <param name="cancellationToken">Token used to observe request cancellation.</param>
+        /// <response code="200">The password was changed successfully.</response>
+        /// <response code="400">Validation failed or the current password is incorrect.</response>
+        /// <response code="401">The caller is not authenticated.</response>
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<ActionResult<ApiResponse<object>>> ChangePassword(
+            ChangePasswordRequestDto request,
+            CancellationToken cancellationToken)
+        {
+            await _authService.ChangePasswordAsync(
+                 User.GetUserId(),
+                 request,
+                 cancellationToken);
+
+            return Ok(
+                ApiResponseFactory.Success(
+                    "Password",
+                    ResponseAction.Updated));
+        }
         /// <summary>
         /// Retrieves the caller's IP address for auditing refresh token activity.
         /// </summary>

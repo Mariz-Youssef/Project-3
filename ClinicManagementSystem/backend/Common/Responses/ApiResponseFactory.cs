@@ -37,6 +37,20 @@ namespace ClinicManagementSystem.backend.Common.Responses
                 Pagination = pagination
             };
         }
+        /// <summary>
+        /// Creates a successful paginated response OverLoading.
+        /// </summary>
+
+        public static ApiResponse<object> Success(
+    string resourceName,
+    ResponseAction action)
+        {
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = BuildMessage(resourceName, action)
+            };
+        }
 
         #endregion
 
