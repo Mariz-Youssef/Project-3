@@ -1,4 +1,5 @@
 using ClinicManagementSystem.backend.Models;
+using ClinicManagementSystem.backend.Common.Pagination;
 using ClinicManagementSystem.backend.Persistence.Interfaces;
 
 namespace ClinicManagementSystem.backend.Features.Patients.Interfaces;
@@ -9,5 +10,7 @@ public interface IPatientRepository : IGenericRepository<Patient>
 
     Task<Patient?> GetPatientByIdWithUserAsync(int patientId, CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<Patient>> SearchPatientsWithUserAsync(string searchTerm, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
+    Task<PagedResult<Patient>> GetAllPatientsPagedAsync(PaginationParameters pagination, CancellationToken cancellationToken = default);
+
+    Task<PagedResult<Patient>> SearchPatientsPagedAsync(string searchTerm, PaginationParameters pagination, CancellationToken cancellationToken = default);
 }

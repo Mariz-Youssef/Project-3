@@ -1,4 +1,5 @@
 using ClinicManagementSystem.backend.Features.Patients.DTOs;
+using ClinicManagementSystem.backend.Common.Pagination;
 
 namespace ClinicManagementSystem.backend.Features.Patients.Interfaces;
 
@@ -14,5 +15,7 @@ public interface IPatientService
 
     Task<bool> DeletePatientAsync(int patientId, CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<PatientResponseDto>> SearchPatientsAsync(string searchTerm, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
+    Task<PagedResult<PatientResponseDto>> GetAllPatientsAsync(PaginationParameters pagination, CancellationToken cancellationToken = default);
+
+    Task<PagedResult<PatientResponseDto>> SearchPatientsAsync(string searchTerm, PaginationParameters pagination, CancellationToken cancellationToken = default);
 }
