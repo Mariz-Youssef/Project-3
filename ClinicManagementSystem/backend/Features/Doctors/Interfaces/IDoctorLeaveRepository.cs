@@ -19,5 +19,13 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Interfaces
         /// Checks whether a leave overlaps an existing leave.
         /// </summary>
         Task<bool> HasOverlappingLeaveAsync(int doctorId,DateOnly start,DateOnly end, int? excludeId ,CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Determines whether the doctor is on leave on the specified date.
+        /// </summary>
+        Task<bool> IsOnLeaveAsync(int doctorId, DateOnly appointmentDate, CancellationToken cancellationToken = default);
+
+
+
     }
 }
