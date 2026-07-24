@@ -565,7 +565,88 @@ namespace ClinicManagementSystem.backend.Features.Appointments.Services
 
             return appointment;
         }
+        public async Task<AppointmentResponseDto> ConfirmAsync(int appointmentId,CancellationToken cancellationToken = default)
+        {
+            var appointment = await _appointmentRepository.GetByIdWithDetailsAsync(appointmentId, cancellationToken);
 
+            if (appointment is null)
+                throw new NotFoundException("Appointment not found.");
+
+            EnsureCanConfirm(appointment);
+            appointment.Status = AppointmentStatus.Confirmed;
+            _appointmentRepository.Update(appointment);
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var updatedAppointment = await _appointmentRepository.GetByIdWithDetailsAsync(appointmentId,cancellationToken);
+            return _mapper.Map<AppointmentResponseDto>(updatedAppointment);
+        }
+        public async Task<AppointmentResponseDto> CompleteAsync(int appointmentId,CancellationToken cancellationToken = default)
+        {
+            var appointment = await _appointmentRepository.GetByIdWithDetailsAsync(appointmentId, cancellationToken);
+
+            if (appointment is null)
+                throw new NotFoundException("Appointment not found.");
+
+            EnsureCanComplete(appointment);
+
+            appointment.Status = AppointmentStatus.Completed;
+
+            _appointmentRepository.Update(appointment);
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var updatedAppointment = await _appointmentRepository.GetByIdWithDetailsAsync(appointmentId,cancellationToken);
+
+            return _mapper.Map<AppointmentResponseDto>(updatedAppointment);
+        }
+        public async Task<AppointmentResponseDto> CancelAsync(int appointmentId,CancellationToken cancellationToken = default)
+        {
+            var appointment = await _appointmentRepository.GetByIdWithDetailsAsync(appointmentId, cancellationToken);
+
+            if (appointment is null)
+                throw new NotFoundException("Appointment not found.");
+
+            EnsureCanCancel(appointment);
+            appointment.Status = AppointmentStatus.Cancelled;
+
+            _appointmentRepository.Update(appointment);
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var updatedAppointment =
+                await _appointmentRepository.GetByIdWithDetailsAsync(appointmentId,cancellationToken);
+
+            return _mapper.Map<AppointmentResponseDto>(updatedAppointment);
+        }
+        //helper methods
+
+        private static void EnsureCanConfirm(Appointment appointment)
+        {
+            if (appointment.Status != AppointmentStatus.Pending)
+            {
+                throw new ConflictException(
+                    "Only pending appointments can be confirmed.");
+            }
+        }
+
+        private static void EnsureCanComplete(Appointment appointment)
+        {
+            if (appointment.Status != AppointmentStatus.Confirmed)
+            {
+                throw new ConflictException(
+                    "Only confirmed appointments can be completed.");
+            }
+        }
+
+        private static void EnsureCanCancel(Appointment appointment)
+        {
+            if (appointment.Status is AppointmentStatus.Completed or AppointmentStatus.Cancelled)
+            {
+                throw new ConflictException(
+                    "Completed or cancelled appointments cannot be cancelled.");
+            }
+        }
 
     }
 }
