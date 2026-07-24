@@ -11,6 +11,12 @@ namespace ClinicManagementSystem.backend.Features.Doctors.DependencyInjection
             services.AddScoped<IDoctorRepository, DoctorRepository>();
             services.AddScoped<IDoctorService, DoctorService>();
 
+            services.AddScoped<IDoctorWorkingHourService, DoctorWorkingHourService>();
+            services.AddScoped<IDoctorWorkingHourRepository, DoctorWorkingHourRepository>();
+
+            services.AddScoped<IDoctorLeaveService, DoctorLeaveService>();
+            services.AddScoped<IDoctorLeaveRepository, DoctorLeaveRepository>();
+
             return services;
         }
     }
