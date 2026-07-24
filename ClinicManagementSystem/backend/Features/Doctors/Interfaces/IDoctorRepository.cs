@@ -12,5 +12,10 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Interfaces
         Task<Doctor?> GetByIdWithDetailsAsync(int id,CancellationToken cancellationToken = default);
         Task<bool> LicenseExistsAsync(string licenseNumber,CancellationToken cancellationToken = default);
         Task<bool> UserAlreadyAssignedAsync(int userId,CancellationToken cancellationToken = default);
+ 
+        // Retrieves a doctor together with the related user and department Used while creating appointments. 
+        Task<Doctor?> GetDoctorForAppointmentAsync(int doctorId, CancellationToken cancellationToken = default);
+
+
     }
 }

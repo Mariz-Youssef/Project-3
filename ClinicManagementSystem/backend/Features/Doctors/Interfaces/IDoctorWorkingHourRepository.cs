@@ -19,5 +19,14 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Interfaces
         /// Checks whether the doctor already has working hours for the specified day.
         /// </summary>
         Task<bool> ExistsForDayAsync(int doctorId,DayOfWeek day, int? excludeId = null, CancellationToken cancellationToken = default);
+
+
+        /// <summary>
+        /// Retrieves the doctor's working schedule for the specified day.
+        /// </summary>
+        Task<DoctorWorkingHour?> GetWorkingHoursAsync(int doctorId, DayOfWeek dayOfWeek, CancellationToken cancellationToken = default);
+
+
+
     }
 }

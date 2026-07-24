@@ -13,4 +13,10 @@ public interface IPatientRepository : IGenericRepository<Patient>
     Task<PagedResult<Patient>> GetAllPatientsPagedAsync(PaginationParameters pagination, CancellationToken cancellationToken = default);
 
     Task<PagedResult<Patient>> SearchPatientsPagedAsync(string searchTerm, PaginationParameters pagination, CancellationToken cancellationToken = default);
+
+
+    // Retrieves a patient by its related application user identifier.
+    Task<Patient?> GetByUserIdAsync(int userId, CancellationToken cancellationToken = default);
+
+
 }

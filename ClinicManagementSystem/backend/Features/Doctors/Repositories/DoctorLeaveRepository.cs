@@ -37,5 +37,15 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Repositories
 
             return await query.AnyAsync(l => l.StartDate <= end && l.EndDate >= start,cancellationToken);
         }
+
+        public async Task<bool> IsOnLeaveAsync(int doctorId, DateOnly appointmentDate, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet.AnyAsync(
+                leave =>
+                    leave.DoctorId == doctorId &&
+                    leave.StartDate <= appointmentDate &&
+                    leave.EndDate >= appointmentDate,
+                cancellationToken);
+        }
     }
 }

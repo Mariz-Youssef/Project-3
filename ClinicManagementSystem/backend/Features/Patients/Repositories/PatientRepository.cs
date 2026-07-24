@@ -105,4 +105,13 @@ public sealed class PatientRepository : GenericRepository<Patient>, IPatientRepo
             .OrderBy(patient => patient.Id)
             .ToPagedResultAsync(pagination, cancellationToken);
     }
+
+    public async Task<Patient?> GetByUserIdAsync(int userId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Patients
+            .Include(p => p.User)
+            .FirstOrDefaultAsync(
+                p => p.UserId == userId,
+                cancellationToken);
+    }
 }

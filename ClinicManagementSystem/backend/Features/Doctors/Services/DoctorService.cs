@@ -19,20 +19,20 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Services
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IUserService _userService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public DoctorService(
-            IDoctorRepository doctorRepository,
-            IDepartmentRepository departmentRepository,
-            IApplicationDbContext context,
-            IUserService userService,
-            IMapper mapper)
+        IDoctorRepository doctorRepository,
+        IDepartmentRepository departmentRepository,
+        IApplicationDbContext context,
+        IMapper mapper,
+        UserManager<ApplicationUser> userManager)
         {
             _doctorRepository = doctorRepository;
             _departmentRepository = departmentRepository;
             _context = context;
             _mapper = mapper;
-            _userService = userService;
+            _userManager = userManager;
         }
         public async Task<PagedResult<DoctorResponse>> GetAllAsync(PaginationParameters pagination,CancellationToken cancellationToken = default)
         {
@@ -56,39 +56,47 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Services
 
             return _mapper.Map<DoctorResponse>(doctor);
         }
-        public async Task<DoctorResponse> CreateAsync(CreateDoctorRequest request, CancellationToken cancellationToken = default)
+        public async Task<DoctorResponse> CreateAsync(CreateDoctorRequest request,CancellationToken cancellationToken = default)
         {
-            // check if user exists
-            if (!await _userService.ExistsAsync(request.UserId, cancellationToken))
+            // Ensure the ApplicationUser exists
+            ApplicationUser? user =await _userManager.FindByIdAsync(request.UserId.ToString());
+
+            if (user is null)
             {
-                throw new NotFoundException("User not found.");
+                throw new NotFoundException(
+                    $"User with ID '{request.UserId}' was not found.");
             }
 
-            // Check department exists
+            bool isDoctor = await _userManager.IsInRoleAsync(user, "Doctor");
+
+            if (!isDoctor)
+            {
+                throw new ConflictException(
+                    "Only users assigned to the Doctor role can create a doctor profile.");
+            }
+
+            // Ensure department exists
             if (!await _departmentRepository.ExistsAsync(request.DepartmentId, cancellationToken))
             {
                 throw new NotFoundException("Department not found.");
             }
 
-            // Check user isn't already a doctor
-            if (await _doctorRepository.UserAlreadyAssignedAsync(request.UserId,cancellationToken))
-            {
-                throw new ConflictException("This user is already assigned to a doctor."); 
-            }
-
-            // Check license uniqueness
-            if (await _doctorRepository.LicenseExistsAsync(request.LicenseNumber,cancellationToken))
+            // Ensure license number is unique
+            if (await _doctorRepository.LicenseExistsAsync(request.LicenseNumber, cancellationToken))
             {
                 throw new ConflictException("License number already exists.");
             }
 
             var doctor = _mapper.Map<Doctor>(request);
+
             await _doctorRepository.AddAsync(doctor, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
-            var createdDoctor = await _doctorRepository.GetByIdWithDetailsAsync(doctor.Id, cancellationToken);
+            var created = await _doctorRepository.GetByIdWithDetailsAsync(
+                doctor.Id,
+                cancellationToken);
 
-            return _mapper.Map<DoctorResponse>(createdDoctor);
+            return _mapper.Map<DoctorResponse>(created);
         }
         public async Task<DoctorResponse> UpdateAsync(int id,UpdateDoctorRequest request,CancellationToken cancellationToken = default)
         {
