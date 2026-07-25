@@ -16,6 +16,10 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Interfaces
         // Retrieves a doctor together with the related user and department Used while creating appointments. 
         Task<Doctor?> GetDoctorForAppointmentAsync(int doctorId, CancellationToken cancellationToken = default);
 
+        // Retrieves the doctor profile associated with the specified user.
+        Task<Doctor?> GetByUserIdAsync(int userId, CancellationToken cancellationToken = default);
+
+
 
     }
 }
