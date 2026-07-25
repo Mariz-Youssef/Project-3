@@ -114,12 +114,12 @@ export function DoctorsPage() {
       header: "Specialization",
       render: (row) => <Badge tone="mint">{row.specialization}</Badge>,
     },
-    { key: "licenseNumber", header: "License #", render: (row) => row.licenseNumber || "—" },
-    {
-      key: "yearsOfExperience",
-      header: "Experience",
-      render: (row) => (row.yearsOfExperience != null ? `${row.yearsOfExperience} yrs` : "—"),
-    },
+    //{ key: "licenseNumber", header: "License #", render: (row) => row.licenseNumber || "—" },
+    //{
+    //  key: "yearsOfExperience",
+    //  header: "Experience",
+    //  render: (row) => (row.yearsOfExperience != null ? `${row.yearsOfExperience} yrs` : "—"),
+    //},
     {
       key: "consultationFee",
       header: "Fee",

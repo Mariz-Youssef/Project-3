@@ -57,6 +57,14 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Services
                 request.Password,
                 RoleNames.Patient);
 
+            var patient = new Patient
+            {
+                UserId = user.Id
+            };
+
+            _context.Patients.Add(patient);
+            await _context.SaveChangesAsync(cancellationToken);
+            
             return new RegisterResponseDto
             {
                 UserId = user.Id,
@@ -76,6 +84,14 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Services
                 user,
                 request.Password,
                 RoleNames.Doctor);
+            var doctor = new Doctor
+            {
+                UserId = user.Id,
+        
+            };
+
+            _context.Doctors.Add(doctor);
+            await _context.SaveChangesAsync(cancellationToken);
 
             return new DoctorAccountResponseDto
             {

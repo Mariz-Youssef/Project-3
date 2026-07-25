@@ -57,6 +57,7 @@ function AppRoutes() {
           <Route element={<ProtectedRoute roles={[ROLES.ADMIN, ROLES.DOCTOR]} />}>
             <Route path="/patients" element={<PatientsPage />} />
             <Route path="/patients/:id" element={<PatientDetailPage />} />
+                   
           </Route>
 
           <Route element={<ProtectedRoute roles={[ROLES.PATIENT]} />}>
@@ -64,6 +65,7 @@ function AppRoutes() {
             <Route path="/my-appointments" element={<MyAppointmentsPage />} />
             <Route path="/appointments/book" element={<BookAppointmentPage />} />
             <Route path="/appointments/:id/edit" element={<EditAppointmentPage />} />
+
           </Route>
 
           <Route element={<ProtectedRoute roles={[ROLES.ADMIN]} />}>

@@ -20,5 +20,9 @@ export const patientsApi = {
     axiosClient.post("/patients/profile", payload).then(unwrap),
 
   updateMyProfile: (payload) =>
-    axiosClient.put("/patients/profile", payload).then(unwrap),
+        axiosClient.put("/patients/profile", payload).then(unwrap),
+    completeProfile: (payload) =>
+        axiosClient
+            .put("/patients/profile", payload)
+            .then(unwrap),
 };

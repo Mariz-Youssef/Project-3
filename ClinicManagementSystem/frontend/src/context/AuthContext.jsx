@@ -14,25 +14,47 @@ function extractTokens(payload) {
 }
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    const { accessToken } = getTokens();
-    return accessToken ? userFromToken(accessToken) : null;
-  });
-  const [initializing, setInitializing] = useState(false);
+    const savedUser = localStorage.getItem("user");
 
-  useEffect(() => {
-    const { accessToken } = getTokens();
-    if (accessToken) setUser(userFromToken(accessToken));
-  }, []);
+    const [user, setUser] = useState(() => {
+        if (savedUser) {
+            return JSON.parse(savedUser);
+        }
+
+        const { accessToken } = getTokens();
+        return accessToken ? userFromToken(accessToken) : null;
+    });
+  const [initializing, setInitializing] = useState(false);
+    useEffect(() => {
+        const savedUser = localStorage.getItem("user");
+
+        if (savedUser) {
+            setUser(JSON.parse(savedUser));
+            return;
+        }
+
+        const { accessToken } = getTokens();
+        if (accessToken) {
+            setUser(userFromToken(accessToken));
+        }
+    }, []);
 
   async function login(credentials) {
     try {
       const payload = await authApi.login(credentials);
       const tokens = extractTokens(payload);
       setTokens(tokens);
-      const nextUser = userFromToken(tokens.accessToken);
-      setUser(nextUser);
-      return { success: true, user: nextUser };
+        const nextUser = {
+            ...userFromToken(tokens.accessToken),
+            fullName: payload.fullName,
+        };
+
+        setUser(nextUser);
+
+        return {
+            success: true,
+            user: nextUser,
+        };
     } catch (error) {
       return { success: false, error: unwrapError(error) };
     }
@@ -54,8 +76,9 @@ export function AuthProvider({ children }) {
     } catch {
       // Best-effort revoke; proceed with local logout regardless.
     } finally {
-      clearTokens();
-      setUser(null);
+        clearTokens();
+        localStorage.removeItem("user");
+        setUser(null);
     }
   }
 

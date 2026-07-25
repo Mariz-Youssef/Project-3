@@ -7,11 +7,7 @@ import { doctorsApi } from "../../api/doctorsApi";
 import { patientsApi } from "../../api/patientsApi";
 import "./Dashboard.css";
 
-// We only need a count here, not the records — but if the backend's
-// response doesn't carry a real total-count field (see the console.warn in
-// unwrapList), we fall back to items.length, so pageSize needs to be large
-// enough for that fallback to actually reflect reality rather than always
-// reading back "1".
+
 const PAGE_ONE = { pageNumber: 1, pageSize: 200 };
 
 export function DashboardPage() {
@@ -58,8 +54,12 @@ export function DashboardPage() {
         <div>
           <p className="page-eyebrow">Overview</p>
           <h1 className="page-title">
-            Good to see you{user?.email ? `, ${user.email}` : ""}
-          </h1>
+                      Good to see you
+                      {user?.fullName
+                          ? `, ${user.fullName}`
+                          : user?.email
+                              ? `, ${user.email}`
+                              : ""} </h1>
           <p className="page-subtitle">
             A quick snapshot of what's happening across the clinic.
           </p>

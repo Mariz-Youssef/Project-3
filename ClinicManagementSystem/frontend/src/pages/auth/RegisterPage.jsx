@@ -6,12 +6,15 @@ import { FormField, TextInput } from "../../components/common/FormField";
 import { Button } from "../../components/common/Button";
 import { useToast } from "../../context/ToastContext";
 import "./AuthLayout.css";
+import { useAuth } from "../../context/AuthContext";
 
 export function RegisterPage() {
   const navigate = useNavigate();
-  const toast = useToast();
+    const toast = useToast();
+    const { login } = useAuth();
 
-  const [form, setForm] = useState({
+    const [form, setForm] = useState({
+    fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -23,26 +26,41 @@ export function RegisterPage() {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setError(null);
+    async function handleSubmit(e) {
+        e.preventDefault();
+        setError(null);
 
-    if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
+        if (form.password !== form.confirmPassword) {
+            setError("Passwords do not match.");
+            return;
+        }
 
-    setLoading(true);
-    try {
-      await authApi.register(form);
-      toast.success("Account created. You can now log in.");
-      navigate("/login", { replace: true });
-    } catch (err) {
-      setError(unwrapError(err).message);
-    } finally {
-      setLoading(false);
+        setLoading(true);
+        try {
+            await authApi.register(form);
+
+            const result = await login({
+                email: form.email,
+                password: form.password,
+            });
+
+            if (!result.success) {
+                throw new Error(result.error?.message ?? "Login failed.");
+            }
+
+            toast.success("Account created successfully.");
+
+            navigate("/my-profile", {
+                replace: true,
+            });
+        }
+        catch (err) {
+            setError(unwrapError(err).message ?? err.message);
+        }
+        finally {
+            setLoading(false);
+        }
     }
-  }
 
   return (
     <div className="auth-screen">
@@ -63,7 +81,16 @@ export function RegisterPage() {
 
           <form className="stack-vertical" onSubmit={handleSubmit}>
             {error && <div className="form-error-banner">{error}</div>}
-
+            <FormField label="Full name" htmlFor="full-name">
+                <TextInput
+                    id="full-name"
+                    type="text"
+                    required
+                    value={form.fullName}
+                    onChange={(e) => update("fullName", e.target.value)}
+                    placeholder="Enter your full name"
+                />
+            </FormField>
             <FormField label="Email" htmlFor="reg-email">
               <TextInput
                 id="reg-email"
@@ -72,6 +99,8 @@ export function RegisterPage() {
                 autoComplete="email"
                 value={form.email}
                 onChange={(e) => update("email", e.target.value)}
+                placeholder="Enter your a valid email"
+
               />
             </FormField>
 
@@ -83,6 +112,8 @@ export function RegisterPage() {
                 autoComplete="new-password"
                 value={form.password}
                 onChange={(e) => update("password", e.target.value)}
+                placeholder="Enter a password"
+
               />
             </FormField>
 
@@ -94,6 +125,7 @@ export function RegisterPage() {
                 autoComplete="new-password"
                 value={form.confirmPassword}
                 onChange={(e) => update("confirmPassword", e.target.value)}
+                placeholder="Confirm password"
               />
             </FormField>
 
