@@ -1,5 +1,6 @@
 ﻿using ClinicManagementSystem.backend.Common.Responses;
-using ClinicManagementSystem.backend.Features.Authentication.DTOs;
+using ClinicManagementSystem.backend.Features.Authentication.DTOs.Requests;
+using ClinicManagementSystem.backend.Features.Authentication.DTOs.Responses;
 
 namespace ClinicManagementSystem.backend.Features.Authentication.Interfaces
 {

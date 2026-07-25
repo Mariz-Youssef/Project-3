@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
-using ClinicManagementSystem.backend.Features.Authentication.DTOs;
+using ClinicManagementSystem.backend.Features.Authentication.DTOs.Requests;
+using ClinicManagementSystem.backend.Features.Authentication.DTOs.Responses;
+using ClinicManagementSystem.backend.Features.Authentication.Models;
 using ClinicManagementSystem.backend.Models;
 
 namespace ClinicManagementSystem.backend.Features.Authentication.Mapping
@@ -41,6 +43,15 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Mapping
                 .ForMember(dest => dest.AccessTokenExpiresAt, opt => opt.Ignore())
                 .ForMember(dest => dest.RefreshToken, opt => opt.Ignore())
                 .ForMember(dest => dest.RefreshTokenExpiresAt, opt => opt.Ignore());
+
+            // GoogleUserPayload -> ApplicationUser
+            // Used only when auto-provisioning a new account on first Google sign-in.
+            // No password is set — the user authenticates exclusively via Google.
+            CreateMap<GoogleUserPayload, ApplicationUser>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.EmailConfirmed, opt => opt.MapFrom(src => true))
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName));
         }
     }
 }

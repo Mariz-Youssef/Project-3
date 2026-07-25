@@ -1,4 +1,4 @@
-﻿namespace ClinicManagementSystem.backend.Features.Authentication.DTOs
+﻿namespace ClinicManagementSystem.backend.Features.Authentication.DTOs.Responses
 {
     public class RegisterResponseDto
     {

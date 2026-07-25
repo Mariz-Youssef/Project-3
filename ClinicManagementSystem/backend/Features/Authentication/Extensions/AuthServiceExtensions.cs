@@ -1,6 +1,7 @@
 ﻿using ClinicManagementSystem.backend.Features.Authentication.Interfaces;
 using ClinicManagementSystem.backend.Features.Authentication.Repository;
 using ClinicManagementSystem.backend.Features.Authentication.Services;
+using ClinicManagementSystem.backend.Features.Authentication.Validators;
 
 namespace ClinicManagementSystem.backend.Features.Authentication.Extensions
 {
@@ -19,6 +20,10 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Extensions
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IGoogleTokenValidator, GoogleTokenValidator>();
+            services.AddScoped<IAuthTokenIssuer, AuthTokenIssuer>();
+            services.AddScoped<IGoogleAuthenticationService, GoogleAuthenticationService>();
+           
 
             return services;
         }

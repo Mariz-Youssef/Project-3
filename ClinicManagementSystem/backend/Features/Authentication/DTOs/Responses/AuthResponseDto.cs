@@ -1,4 +1,4 @@
-﻿namespace ClinicManagementSystem.backend.Features.Authentication.DTOs
+﻿namespace ClinicManagementSystem.backend.Features.Authentication.DTOs.Responses
 {
     /// <summary>
     /// Response returned after a successful register, login, or token refresh.

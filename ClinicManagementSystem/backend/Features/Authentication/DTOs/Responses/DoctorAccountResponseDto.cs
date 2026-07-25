@@ -1,4 +1,4 @@
-﻿namespace ClinicManagementSystem.backend.Features.Authentication.DTOs
+﻿namespace ClinicManagementSystem.backend.Features.Authentication.DTOs.Responses
 {
     /// <summary>
     /// Response returned after an Admin successfully creates a Doctor's login identity.
