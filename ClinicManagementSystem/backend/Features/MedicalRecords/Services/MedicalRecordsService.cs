@@ -383,27 +383,32 @@ namespace ClinicManagementSystem.backend.Features.MedicalRecords.Services
             // ---------------------------------------------------------------------
             _mapper.Map(request, medicalRecord);
 
-            //// ---------------------------------------------------------------------
-            //// STEP 8:
-            //// Update the medical record.
-            //// ---------------------------------------------------------------------
-            //_medicalRecordRepository.Update(medicalRecord);
+            _logger.LogInformation(
+    "Diagnosis after mapping: {Diagnosis}",
+    medicalRecord.Diagnosis);
 
+            _logger.LogInformation(
+                "Notes after mapping: {Notes}",
+                medicalRecord.Notes);
+
+            _logger.LogInformation(
+                "FollowUpDate after mapping: {FollowUpDate}",
+                medicalRecord.FollowUpDate);
             // ---------------------------------------------------------------------
-            // STEP 9:
+            // STEP 8:
             // Persist the changes.
             // ---------------------------------------------------------------------
             await _context.SaveChangesAsync(cancellationToken);
 
             // ---------------------------------------------------------------------
-            // STEP 10:
+            // STEP 9:
             // Reload the medical record with all related entities.
             // ---------------------------------------------------------------------
             medicalRecord = await _medicalRecordRepository.
                 GetByIdWithDetailsAsync(medicalRecord.Id, cancellationToken) ?? throw new InvalidOperationException("Failed to reload the updated medical record.");
 
             // ---------------------------------------------------------------------
-            // STEP 11:
+            // STEP 10:
             // Log successful update.
             // ---------------------------------------------------------------------
             _logger.LogInformation(
@@ -411,7 +416,7 @@ namespace ClinicManagementSystem.backend.Features.MedicalRecords.Services
                 medicalRecord!.Id);
 
             // ---------------------------------------------------------------------
-            // STEP 12:
+            // STEP 11:
             // Return the updated response DTO.
             // ---------------------------------------------------------------------
             return _mapper.Map<MedicalRecordResponseDto>(medicalRecord);

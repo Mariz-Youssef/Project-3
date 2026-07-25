@@ -35,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="backend\Features\Prescriptions\" />
     <Folder Include="backend\Features\Patients\Controllers\" />
     <Folder Include="backend\Features\Patients\Repositories\" />
     <Folder Include="backend\Features\Patients\DTOs\" />
