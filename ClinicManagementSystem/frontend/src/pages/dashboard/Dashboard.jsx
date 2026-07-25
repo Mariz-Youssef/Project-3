@@ -7,7 +7,12 @@ import { doctorsApi } from "../../api/doctorsApi";
 import { patientsApi } from "../../api/patientsApi";
 import "./Dashboard.css";
 
-const PAGE_ONE = { pageNumber: 1, pageSize: 1 };
+// We only need a count here, not the records — but if the backend's
+// response doesn't carry a real total-count field (see the console.warn in
+// unwrapList), we fall back to items.length, so pageSize needs to be large
+// enough for that fallback to actually reflect reality rather than always
+// reading back "1".
+const PAGE_ONE = { pageNumber: 1, pageSize: 200 };
 
 export function DashboardPage() {
   const { user } = useAuth();

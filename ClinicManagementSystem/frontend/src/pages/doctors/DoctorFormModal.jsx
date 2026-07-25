@@ -1,25 +1,33 @@
 import { useEffect, useState } from "react";
 import { Modal } from "../../components/common/Modal";
-import { FormField, TextInput, TextArea, Select } from "../../components/common/FormField";
+import { FormField, TextInput, Select } from "../../components/common/FormField";
 import { Button } from "../../components/common/Button";
 import { doctorsApi } from "../../api/doctorsApi";
 import { departmentsApi } from "../../api/departmentsApi";
 import { unwrapError } from "../../api/axiosClient";
+import { personDisplayName } from "../../utils/personDisplay";
 
+// Matches CreateDoctorRequest exactly — the Doctor entity itself has no
+// name/email/phone/bio, only a link (UserId) to an existing user account.
 const EMPTY_FORM = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  phone: "",
-  specialization: "",
+  userId: "",
   departmentId: "",
+  specialization: "",
   licenseNumber: "",
-  bio: "",
+  yearsOfExperience: "",
+  consultationFee: "",
 };
 
 export function DoctorFormModal({ doctor, onClose, onSaved }) {
   const isEdit = Boolean(doctor);
-  const [form, setForm] = useState({ ...EMPTY_FORM, ...doctor });
+  const [form, setForm] = useState({
+    ...EMPTY_FORM,
+    ...doctor,
+    userId: doctor?.userId ?? "",
+    departmentId: doctor?.departmentId ?? "",
+    yearsOfExperience: doctor?.yearsOfExperience ?? "",
+    consultationFee: doctor?.consultationFee ?? "",
+  });
   const [departments, setDepartments] = useState([]);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -40,7 +48,18 @@ export function DoctorFormModal({ doctor, onClose, onSaved }) {
     setError(null);
     setSaving(true);
 
-    const payload = { ...form, departmentId: Number(form.departmentId) || null };
+    const payload = {
+      departmentId: Number(form.departmentId),
+      specialization: form.specialization,
+      licenseNumber: form.licenseNumber,
+      yearsOfExperience: Number(form.yearsOfExperience),
+      consultationFee: Number(form.consultationFee),
+    };
+    // UserId links the profile to an existing account and is only meaningful
+    // when creating a new doctor profile, not when editing one.
+    if (!isEdit) {
+      payload.userId = Number(form.userId);
+    }
 
     try {
       if (isEdit) {
@@ -59,7 +78,9 @@ export function DoctorFormModal({ doctor, onClose, onSaved }) {
   return (
     <Modal
       title={isEdit ? "Edit doctor" : "Add doctor"}
-      subtitle={isEdit ? `${doctor.firstName} ${doctor.lastName}` : "Add a doctor profile."}
+      subtitle={
+        isEdit ? personDisplayName(doctor, "Doctor") : "Link an existing user account to a doctor profile."
+      }
       onClose={onClose}
       width={640}
     >
@@ -67,53 +88,30 @@ export function DoctorFormModal({ doctor, onClose, onSaved }) {
         {error && <div className="form-error-banner">{error}</div>}
 
         <div className="form-grid">
-          <FormField label="First name" htmlFor="doc-first">
-            <TextInput
-              id="doc-first"
-              required
-              value={form.firstName}
-              onChange={(e) => update("firstName", e.target.value)}
-            />
-          </FormField>
+          {!isEdit && (
+            <FormField
+              label="User ID"
+              htmlFor="doc-userid"
+              full
+            >
+              <TextInput
+                id="doc-userid"
+                type="number"
+                min="1"
+                required
+                value={form.userId}
+                onChange={(e) => update("userId", e.target.value)}
+                placeholder="ID of the existing doctor login account"
+              />
+              <p style={{ fontSize: 12, color: "var(--color-slate)", marginTop: 4 }}>
+                This is the ID of an account already created via "Create doctor
+                account" — this form only adds their doctor profile
+                (specialization, license, etc.), it doesn't create a login.
+              </p>
+            </FormField>
+          )}
 
-          <FormField label="Last name" htmlFor="doc-last">
-            <TextInput
-              id="doc-last"
-              required
-              value={form.lastName}
-              onChange={(e) => update("lastName", e.target.value)}
-            />
-          </FormField>
-
-          <FormField label="Email" htmlFor="doc-email">
-            <TextInput
-              id="doc-email"
-              type="email"
-              required
-              value={form.email}
-              onChange={(e) => update("email", e.target.value)}
-            />
-          </FormField>
-
-          <FormField label="Phone" htmlFor="doc-phone">
-            <TextInput
-              id="doc-phone"
-              value={form.phone}
-              onChange={(e) => update("phone", e.target.value)}
-            />
-          </FormField>
-
-          <FormField label="Specialization" htmlFor="doc-spec">
-            <TextInput
-              id="doc-spec"
-              required
-              value={form.specialization}
-              onChange={(e) => update("specialization", e.target.value)}
-              placeholder="e.g. Pediatrics"
-            />
-          </FormField>
-
-          <FormField label="Department" htmlFor="doc-dept">
+          <FormField label="Department" htmlFor="doc-dept" full>
             <Select
               id="doc-dept"
               required
@@ -131,20 +129,47 @@ export function DoctorFormModal({ doctor, onClose, onSaved }) {
             </Select>
           </FormField>
 
-          <FormField label="License number" htmlFor="doc-license">
+          <FormField label="Specialization" htmlFor="doc-spec">
             <TextInput
-              id="doc-license"
-              value={form.licenseNumber}
-              onChange={(e) => update("licenseNumber", e.target.value)}
+              id="doc-spec"
+              required
+              value={form.specialization}
+              onChange={(e) => update("specialization", e.target.value)}
+              placeholder="e.g. Neurology"
             />
           </FormField>
 
-          <FormField label="Bio" htmlFor="doc-bio" full>
-            <TextArea
-              id="doc-bio"
-              value={form.bio}
-              onChange={(e) => update("bio", e.target.value)}
-              placeholder="Short professional background"
+          <FormField label="License number" htmlFor="doc-license">
+            <TextInput
+              id="doc-license"
+              required
+              value={form.licenseNumber}
+              onChange={(e) => update("licenseNumber", e.target.value)}
+              placeholder="e.g. NEUR-1005"
+            />
+          </FormField>
+
+          <FormField label="Years of experience" htmlFor="doc-years">
+            <TextInput
+              id="doc-years"
+              type="number"
+              min="0"
+              required
+              value={form.yearsOfExperience}
+              onChange={(e) => update("yearsOfExperience", e.target.value)}
+            />
+          </FormField>
+
+          <FormField label="Consultation fee" htmlFor="doc-fee">
+            <TextInput
+              id="doc-fee"
+              type="number"
+              min="0"
+              step="0.01"
+              required
+              value={form.consultationFee}
+              onChange={(e) => update("consultationFee", e.target.value)}
+              placeholder="e.g. 500.00"
             />
           </FormField>
         </div>

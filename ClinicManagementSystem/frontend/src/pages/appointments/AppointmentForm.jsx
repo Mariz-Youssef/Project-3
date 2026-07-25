@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { doctorsApi } from "../../api/doctorsApi";
 import { FormField, TextInput, TextArea, Select } from "../../components/common/FormField";
 import { Button } from "../../components/common/Button";
+import { personDisplayName } from "../../utils/personDisplay";
 
 const EMPTY_FORM = {
   doctorId: "",
@@ -83,7 +84,7 @@ export function AppointmentForm({ initialValues, onSubmit, onCancel, submitLabel
             </option>
             {doctors.map((d) => (
               <option key={d.id} value={d.id}>
-                Dr. {d.firstName} {d.lastName} — {d.specialization}
+                {personDisplayName(d, "Doctor")} — {d.specialization}
               </option>
             ))}
           </Select>

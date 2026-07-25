@@ -120,29 +120,53 @@ pattern as `DoctorLeavesController` / `DoctorWorkingHoursController`. Once
 either exists, swap `MyAppointmentsPage`'s data source over to it and this
 whole cache workaround can be deleted.
 
-## Assumptions you'll likely need to adjust
+## Fields now match your actual DTOs
 
-I don't have your actual DTOs, so field names in the forms are best guesses
-based on the entities mentioned in your architecture (Doctors, Patients,
-Appointments, MedicalRecords, AvailabilitySlots):
+Earlier versions of this frontend guessed at field names for Doctor and
+Patient. Now that you've shared the real DTOs and table screenshots, the
+forms and displays have been corrected to match them exactly:
 
-- **Doctor**: `firstName`, `lastName`, `email`, `phone`, `specialization`,
-  `departmentId`, `licenseNumber`, `bio`
-- **Patient**: `firstName`, `lastName`, `phone`, `dateOfBirth`, `gender`,
-  `bloodType`, `address`
+- **Doctor** (from `CreateDoctorRequest`): `userId` (create only — links to an
+  existing login account made via "Create doctor account"), `departmentId`,
+  `specialization`, `licenseNumber`, `yearsOfExperience`, `consultationFee`.
+  There is **no** name/email/phone/bio on the Doctor entity itself — that
+  lives on the linked User account. `src/utils/personDisplay.js` looks for a
+  joined name field on the response DTO (`fullName`, `name`,
+  `firstName`+`lastName`, etc.) and falls back to `Doctor #<userId>` if none
+  is present, rather than assuming a shape that isn't actually there.
+- **Patient** (from `CreatePatientDto`): `dateOfBirth`, `gender`,
+  `bloodGroup`, `address`, `allergies`, `medicalNotes`, `emergencyContactName`,
+  `emergencyContactPhone`. Same story — no name/email/phone on Patient
+  itself, so `personDisplayName()` is used there too.
+
+**Worth double-checking on the backend:** your screenshot shows existing
+`BloodGroup` values like `APositive` / `ONegative` / `BPositive` (9–10
+characters), but `CreatePatientDto` has `[MaxLength(3)]` on that field. That
+means the seeded rows couldn't have been created *through* this DTO — they
+must've been inserted directly into the database — and any new patient who
+tries to save through the API today can only enter something 3 characters
+long (e.g. `O+`, `AB-`). The frontend form enforces the 3-character limit
+since that's what the DTO validates, with a placeholder like `O+`/`A-`/`AB+`.
+If you actually want the long form (`APositive`), the `[MaxLength(3)]`
+constraint needs to change on the backend — otherwise every new patient's
+blood group will be stored in a different format than the existing rows.
+
+## Still-unverified assumptions
+
+I don't have DTOs for these yet, so these field names remain best guesses:
+
 - **Department**: `name`, `description`
 - **Doctor leave**: `startDate`, `endDate`, `reason`, `status`
 - **Working hours**: `dayOfWeek`, `startTime`, `endTime`
 - **Appointment**: `doctorId`, `appointmentDate` (ISO datetime), `reasonForVisit`,
   plus read-only `status`, `patientName`/`patientFirstName`/`patientLastName`,
-  `doctorName`/`doctorFirstName`/`doctorLastName` on the response DTO (the
-  frontend falls back gracefully between the "one full name field" shape and
-  the "first/last name fields" shape — see `personDisplayName()` in
-  `src/pages/appointments/statusTone.js`)
+  `doctorName`/`doctorFirstName`/`doctorLastName` on the response DTO (falls
+  back gracefully between shapes — see `personDisplayName()` in
+  `src/pages/appointments/statusTone.js`, a separate helper from
+  `src/utils/personDisplay.js` used for Doctor/Patient)
 
-If your DTOs use different property names, update the `form` state objects
-in the matching `*FormModal.jsx` file — the API calls themselves don't need
-to change.
+If your real DTOs differ, update the `form` state object in the matching
+`*FormModal.jsx` file — the API calls themselves don't need to change.
 
 The response envelope is normalized in `src/api/axiosClient.js` via `unwrap`
 (single items) and `unwrapList` (paginated lists → `{ items, pagination }`).

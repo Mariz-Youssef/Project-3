@@ -10,6 +10,7 @@ import { ConfirmDialog } from "../../components/common/ConfirmDialog";
 import { useToast } from "../../context/ToastContext";
 import { useAuth } from "../../context/AuthContext";
 import { ROLES } from "../../utils/roles";
+import { personDisplayName } from "../../utils/personDisplay";
 
 export function PatientsPage() {
   const toast = useToast();
@@ -49,15 +50,19 @@ export function PatientsPage() {
     {
       key: "name",
       header: "Name",
-      render: (row) =>
-        `${row.firstName ?? ""} ${row.lastName ?? ""}`.trim() || row.name,
+      render: (row) => personDisplayName(row, "Patient"),
     },
-    { key: "email", header: "Email", render: (row) => row.email || "—" },
-    { key: "phone", header: "Phone", render: (row) => row.phone || "—" },
     {
       key: "dateOfBirth",
       header: "Date of birth",
       render: (row) => row.dateOfBirth?.slice(0, 10) || "—",
+    },
+    { key: "gender", header: "Gender", render: (row) => row.gender || "—" },
+    { key: "bloodGroup", header: "Blood group", render: (row) => row.bloodGroup || "—" },
+    {
+      key: "emergencyContactName",
+      header: "Emergency contact",
+      render: (row) => row.emergencyContactName || "—",
     },
     ...(isAdmin
       ? [
@@ -119,7 +124,7 @@ export function PatientsPage() {
       {pendingDelete && (
         <ConfirmDialog
           title="Delete patient"
-          message={`Delete ${pendingDelete.firstName ?? ""} ${pendingDelete.lastName ?? ""}'s profile? This can't be undone.`}
+          message={`Delete ${personDisplayName(pendingDelete, "Patient")}'s profile? This can't be undone.`}
           confirmLabel="Delete"
           loading={deleting}
           onConfirm={confirmDelete}

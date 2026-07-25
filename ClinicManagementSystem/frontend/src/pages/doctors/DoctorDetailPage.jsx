@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { doctorsApi } from "../../api/doctorsApi";
+import { departmentsApi } from "../../api/departmentsApi";
 import { unwrapError } from "../../api/axiosClient";
 import { Loader } from "../../components/common/Loader";
 import { Badge } from "../../components/common/Badge";
 import { Card } from "../../components/common/Card";
 import { useAuth } from "../../context/AuthContext";
 import { ROLES } from "../../utils/roles";
+import { personDisplayName, personContact } from "../../utils/personDisplay";
 import { WorkingHoursTab } from "./WorkingHoursTab";
 import { LeavesTab } from "./LeavesTab";
 
@@ -16,6 +18,7 @@ export function DoctorDetailPage() {
   const canManage = user?.role === ROLES.ADMIN || user?.role === ROLES.DOCTOR;
 
   const [doctor, setDoctor] = useState(null);
+  const [department, setDepartment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [tab, setTab] = useState("hours");
@@ -25,7 +28,16 @@ export function DoctorDetailPage() {
     setLoading(true);
     doctorsApi
       .getById(id)
-      .then((data) => !cancelled && setDoctor(data))
+      .then((data) => {
+        if (cancelled) return;
+        setDoctor(data);
+        if (data.departmentId) {
+          departmentsApi
+            .getById(data.departmentId)
+            .then((dept) => !cancelled && setDepartment(dept))
+            .catch(() => {});
+        }
+      })
       .catch((err) => !cancelled && setError(unwrapError(err).message))
       .finally(() => !cancelled && setLoading(false));
     return () => {
@@ -51,8 +63,7 @@ export function DoctorDetailPage() {
     );
   }
 
-  const fullName =
-    `${doctor.firstName ?? ""} ${doctor.lastName ?? ""}`.trim() || doctor.name;
+  const contact = personContact(doctor);
 
   return (
     <div className="page">
@@ -63,8 +74,8 @@ export function DoctorDetailPage() {
               ← Doctors
             </Link>
           </p>
-          <h1 className="page-title">Dr. {fullName}</h1>
-          <p className="page-subtitle">{doctor.email}</p>
+          <h1 className="page-title">{personDisplayName(doctor, "Doctor")}</h1>
+          {contact && <p className="page-subtitle">{contact}</p>}
         </div>
         <Badge tone="mint">{doctor.specialization}</Badge>
       </div>
@@ -72,19 +83,25 @@ export function DoctorDetailPage() {
       <Card className="stack-vertical" style={{ marginBottom: "var(--space-5)" }}>
         <div className="form-grid">
           <div>
-            <p className="page-eyebrow">Phone</p>
-            <p>{doctor.phone || "—"}</p>
+            <p className="page-eyebrow">Department</p>
+            <p>{department?.name ?? `#${doctor.departmentId}`}</p>
           </div>
           <div>
             <p className="page-eyebrow">License number</p>
             <p>{doctor.licenseNumber || "—"}</p>
           </div>
-          {doctor.bio && (
-            <div className="form-grid--full">
-              <p className="page-eyebrow">Bio</p>
-              <p>{doctor.bio}</p>
-            </div>
-          )}
+          <div>
+            <p className="page-eyebrow">Years of experience</p>
+            <p>{doctor.yearsOfExperience != null ? `${doctor.yearsOfExperience} years` : "—"}</p>
+          </div>
+          <div>
+            <p className="page-eyebrow">Consultation fee</p>
+            <p>
+              {doctor.consultationFee != null
+                ? `$${Number(doctor.consultationFee).toFixed(2)}`
+                : "—"}
+            </p>
+          </div>
         </div>
       </Card>
 

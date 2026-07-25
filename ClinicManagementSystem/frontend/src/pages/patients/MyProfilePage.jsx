@@ -7,14 +7,16 @@ import { Button } from "../../components/common/Button";
 import { FormField, TextInput, Select, TextArea } from "../../components/common/FormField";
 import { useToast } from "../../context/ToastContext";
 
+// Matches CreatePatientDto exactly.
 const EMPTY_FORM = {
-  firstName: "",
-  lastName: "",
-  phone: "",
   dateOfBirth: "",
   gender: "",
-  bloodType: "",
+  bloodGroup: "",
   address: "",
+  allergies: "",
+  medicalNotes: "",
+  emergencyContactName: "",
+  emergencyContactPhone: "",
 };
 
 const GENDERS = ["Female", "Male", "Other"];
@@ -94,7 +96,7 @@ export function MyProfilePage() {
           <p className="page-subtitle">
             {notFound
               ? "Finish your patient profile so your care team is ready for your visit."
-              : "Keep your contact and health details up to date."}
+              : "Keep your health and emergency contact details up to date."}
           </p>
         </div>
         {!editing && profile && <Button onClick={() => setEditing(true)}>Edit profile</Button>}
@@ -106,29 +108,6 @@ export function MyProfilePage() {
         <Card title={notFound ? "Complete your profile" : "Edit profile"}>
           <form className="stack-vertical" onSubmit={handleSubmit}>
             <div className="form-grid">
-              <FormField label="First name" htmlFor="p-first">
-                <TextInput
-                  id="p-first"
-                  required
-                  value={form.firstName}
-                  onChange={(e) => update("firstName", e.target.value)}
-                />
-              </FormField>
-              <FormField label="Last name" htmlFor="p-last">
-                <TextInput
-                  id="p-last"
-                  required
-                  value={form.lastName}
-                  onChange={(e) => update("lastName", e.target.value)}
-                />
-              </FormField>
-              <FormField label="Phone" htmlFor="p-phone">
-                <TextInput
-                  id="p-phone"
-                  value={form.phone}
-                  onChange={(e) => update("phone", e.target.value)}
-                />
-              </FormField>
               <FormField label="Date of birth" htmlFor="p-dob">
                 <TextInput
                   id="p-dob"
@@ -138,9 +117,11 @@ export function MyProfilePage() {
                   onChange={(e) => update("dateOfBirth", e.target.value)}
                 />
               </FormField>
+
               <FormField label="Gender" htmlFor="p-gender">
                 <Select
                   id="p-gender"
+                  required
                   value={form.gender}
                   onChange={(e) => update("gender", e.target.value)}
                 >
@@ -154,19 +135,66 @@ export function MyProfilePage() {
                   ))}
                 </Select>
               </FormField>
-              <FormField label="Blood type" htmlFor="p-blood">
+
+              <FormField label="Blood group" htmlFor="p-blood">
                 <TextInput
                   id="p-blood"
-                  value={form.bloodType}
-                  onChange={(e) => update("bloodType", e.target.value)}
-                  placeholder="e.g. O+"
+                  required
+                  maxLength={3}
+                  value={form.bloodGroup}
+                  onChange={(e) => update("bloodGroup", e.target.value.toUpperCase())}
+                  placeholder="e.g. O+, A-, AB+"
                 />
               </FormField>
-              <FormField label="Address" htmlFor="p-address" full>
-                <TextArea
+
+              <FormField label="Address" htmlFor="p-address">
+                <TextInput
                   id="p-address"
+                  required
+                  maxLength={200}
                   value={form.address}
                   onChange={(e) => update("address", e.target.value)}
+                  placeholder="e.g. Nasr City, Cairo"
+                />
+              </FormField>
+
+              <FormField label="Allergies" htmlFor="p-allergies" full>
+                <TextArea
+                  id="p-allergies"
+                  value={form.allergies}
+                  onChange={(e) => update("allergies", e.target.value)}
+                  placeholder="e.g. Penicillin, seafood — leave blank if none"
+                />
+              </FormField>
+
+              <FormField label="Medical notes" htmlFor="p-notes" full>
+                <TextArea
+                  id="p-notes"
+                  value={form.medicalNotes}
+                  onChange={(e) => update("medicalNotes", e.target.value)}
+                  placeholder="Anything else your care team should know"
+                />
+              </FormField>
+
+              <FormField label="Emergency contact name" htmlFor="p-ec-name">
+                <TextInput
+                  id="p-ec-name"
+                  required
+                  maxLength={100}
+                  value={form.emergencyContactName}
+                  onChange={(e) => update("emergencyContactName", e.target.value)}
+                />
+              </FormField>
+
+              <FormField label="Emergency contact phone" htmlFor="p-ec-phone">
+                <TextInput
+                  id="p-ec-phone"
+                  required
+                  pattern="^\+?[1-9]\d{1,14}$"
+                  title="e.g. 01090000001 or +201090000001"
+                  value={form.emergencyContactPhone}
+                  onChange={(e) => update("emergencyContactPhone", e.target.value)}
+                  placeholder="e.g. 01090000001"
                 />
               </FormField>
             </div>
@@ -192,16 +220,6 @@ export function MyProfilePage() {
         <Card title="Profile details">
           <div className="form-grid">
             <div>
-              <p className="page-eyebrow">Name</p>
-              <p>
-                {profile.firstName} {profile.lastName}
-              </p>
-            </div>
-            <div>
-              <p className="page-eyebrow">Phone</p>
-              <p>{profile.phone || "—"}</p>
-            </div>
-            <div>
               <p className="page-eyebrow">Date of birth</p>
               <p>{profile.dateOfBirth?.slice(0, 10) || "—"}</p>
             </div>
@@ -210,12 +228,28 @@ export function MyProfilePage() {
               <p>{profile.gender || "—"}</p>
             </div>
             <div>
-              <p className="page-eyebrow">Blood type</p>
-              <p>{profile.bloodType || "—"}</p>
+              <p className="page-eyebrow">Blood group</p>
+              <p>{profile.bloodGroup || "—"}</p>
             </div>
-            <div className="form-grid--full">
+            <div>
               <p className="page-eyebrow">Address</p>
               <p>{profile.address || "—"}</p>
+            </div>
+            <div className="form-grid--full">
+              <p className="page-eyebrow">Allergies</p>
+              <p>{profile.allergies || "None recorded"}</p>
+            </div>
+            <div className="form-grid--full">
+              <p className="page-eyebrow">Medical notes</p>
+              <p>{profile.medicalNotes || "—"}</p>
+            </div>
+            <div>
+              <p className="page-eyebrow">Emergency contact</p>
+              <p>{profile.emergencyContactName || "—"}</p>
+            </div>
+            <div>
+              <p className="page-eyebrow">Emergency contact phone</p>
+              <p>{profile.emergencyContactPhone || "—"}</p>
             </div>
           </div>
         </Card>

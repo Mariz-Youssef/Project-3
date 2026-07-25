@@ -4,6 +4,7 @@ import { patientsApi } from "../../api/patientsApi";
 import { unwrapError } from "../../api/axiosClient";
 import { Loader } from "../../components/common/Loader";
 import { Card } from "../../components/common/Card";
+import { personDisplayName, personContact } from "../../utils/personDisplay";
 
 export function PatientDetailPage() {
   const { id } = useParams();
@@ -42,8 +43,7 @@ export function PatientDetailPage() {
     );
   }
 
-  const fullName =
-    `${patient.firstName ?? ""} ${patient.lastName ?? ""}`.trim() || patient.name;
+  const contact = personContact(patient);
 
   return (
     <div className="page">
@@ -54,17 +54,13 @@ export function PatientDetailPage() {
               ← Patients
             </Link>
           </p>
-          <h1 className="page-title">{fullName}</h1>
-          <p className="page-subtitle">{patient.email}</p>
+          <h1 className="page-title">{personDisplayName(patient, "Patient")}</h1>
+          {contact && <p className="page-subtitle">{contact}</p>}
         </div>
       </div>
 
       <Card title="Patient details">
         <div className="form-grid">
-          <div>
-            <p className="page-eyebrow">Phone</p>
-            <p>{patient.phone || "—"}</p>
-          </div>
           <div>
             <p className="page-eyebrow">Date of birth</p>
             <p>{patient.dateOfBirth?.slice(0, 10) || "—"}</p>
@@ -74,12 +70,28 @@ export function PatientDetailPage() {
             <p>{patient.gender || "—"}</p>
           </div>
           <div>
-            <p className="page-eyebrow">Blood type</p>
-            <p>{patient.bloodType || "—"}</p>
+            <p className="page-eyebrow">Blood group</p>
+            <p>{patient.bloodGroup || "—"}</p>
           </div>
-          <div className="form-grid--full">
+          <div>
             <p className="page-eyebrow">Address</p>
             <p>{patient.address || "—"}</p>
+          </div>
+          <div className="form-grid--full">
+            <p className="page-eyebrow">Allergies</p>
+            <p>{patient.allergies || "None recorded"}</p>
+          </div>
+          <div className="form-grid--full">
+            <p className="page-eyebrow">Medical notes</p>
+            <p>{patient.medicalNotes || "—"}</p>
+          </div>
+          <div>
+            <p className="page-eyebrow">Emergency contact</p>
+            <p>{patient.emergencyContactName || "—"}</p>
+          </div>
+          <div>
+            <p className="page-eyebrow">Emergency contact phone</p>
+            <p>{patient.emergencyContactPhone || "—"}</p>
           </div>
         </div>
       </Card>

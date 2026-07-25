@@ -12,6 +12,7 @@ import { DoctorFormModal } from "./DoctorFormModal";
 import { useToast } from "../../context/ToastContext";
 import { useAuth } from "../../context/AuthContext";
 import { ROLES } from "../../utils/roles";
+import { personDisplayName } from "../../utils/personDisplay";
 
 const PAGE_SIZE = 10;
 
@@ -106,15 +107,25 @@ export function DoctorsPage() {
     {
       key: "name",
       header: "Name",
-      render: (row) => `${row.firstName ?? ""} ${row.lastName ?? ""}`.trim() || row.name,
+      render: (row) => personDisplayName(row, "Doctor"),
     },
     {
       key: "specialization",
       header: "Specialization",
       render: (row) => <Badge tone="mint">{row.specialization}</Badge>,
     },
-    { key: "email", header: "Email" },
-    { key: "phone", header: "Phone", render: (row) => row.phone || "—" },
+    { key: "licenseNumber", header: "License #", render: (row) => row.licenseNumber || "—" },
+    {
+      key: "yearsOfExperience",
+      header: "Experience",
+      render: (row) => (row.yearsOfExperience != null ? `${row.yearsOfExperience} yrs` : "—"),
+    },
+    {
+      key: "consultationFee",
+      header: "Fee",
+      render: (row) =>
+        row.consultationFee != null ? `$${Number(row.consultationFee).toFixed(2)}` : "—",
+    },
     ...(isAdmin
       ? [
           {
@@ -205,7 +216,7 @@ export function DoctorsPage() {
       {pendingDelete && (
         <ConfirmDialog
           title="Delete doctor"
-          message={`Delete Dr. ${pendingDelete.firstName ?? ""} ${pendingDelete.lastName ?? ""}? This can't be undone.`}
+          message={`Delete ${personDisplayName(pendingDelete, "Doctor")}'s profile? This can't be undone.`}
           confirmLabel="Delete"
           loading={deleting}
           onConfirm={confirmDelete}
