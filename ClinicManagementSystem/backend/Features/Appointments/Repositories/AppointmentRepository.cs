@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ClinicManagementSystem.backend.Data;
+using ClinicManagementSystem.backend.Enums;
 using ClinicManagementSystem.backend.Features.Appointments.DTOs.Responses;
 using ClinicManagementSystem.backend.Features.Appointments.Interfaces;
 using ClinicManagementSystem.backend.Models;
@@ -110,6 +111,15 @@ namespace ClinicManagementSystem.backend.Features.Appointments.Repositories
                 a => startTime < a.EndTime &&
                      endTime > a.StartTime,
                 cancellationToken);
+        }
+
+        public async Task<List<Appointment>> GetDoctorAppointmentsByDateAsync(int doctorId, DateOnly date, CancellationToken cancellationToken)
+        {
+            return await _context.Appointments.Where(a =>
+              a.DoctorId == doctorId &&
+              a.AppointmentDate == date &&
+              a.Status != AppointmentStatus.Cancelled)
+             .ToListAsync(cancellationToken);
         }
 
     }

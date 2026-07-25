@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClinicManagementSystem.backend.Common.Constants;
 using ClinicManagementSystem.backend.Common.Exceptions.CustomExceptions;
 using ClinicManagementSystem.backend.Common.Pagination;
 using ClinicManagementSystem.backend.Common.Services.Interfaces;
@@ -647,6 +648,48 @@ namespace ClinicManagementSystem.backend.Features.Appointments.Services
                     "Completed or cancelled appointments cannot be cancelled.");
             }
         }
+        public async Task<IEnumerable<AvailableSlotResponse>> GetAvailableSlotsAsync(int doctorId, DateOnly date, CancellationToken cancellationToken)
+        {
+            var workingHours = await _workingHourRepository.GetByDoctorAsync(
+                doctorId,
+                cancellationToken);
 
+            var schedule = workingHours.FirstOrDefault(w =>
+                w.DayOfWeek == date.DayOfWeek);
+
+            if (schedule is null)
+                return Enumerable.Empty<AvailableSlotResponse>();
+
+            var appointments = await _appointmentRepository
+                .GetDoctorAppointmentsByDateAsync(
+                    doctorId,
+                    date,
+                    cancellationToken);
+
+            var bookedSlots = appointments
+                .Select(a => a.StartTime)
+                .ToHashSet();
+
+            var availableSlots = new List<AvailableSlotResponse>();
+
+            var currentSlot = schedule.StartTime;
+
+            while (currentSlot.AddMinutes(AppointmentConstants.AppointmentDurationMinutes)
+                   <= schedule.EndTime)
+            {
+                if (!bookedSlots.Contains(currentSlot))
+                {
+                    availableSlots.Add(new AvailableSlotResponse
+                    {
+                        Time = currentSlot
+                    });
+                }
+
+                currentSlot = currentSlot.AddMinutes(
+                    AppointmentConstants.AppointmentDurationMinutes);
+            }
+
+            return availableSlots;
+        }
     }
 }

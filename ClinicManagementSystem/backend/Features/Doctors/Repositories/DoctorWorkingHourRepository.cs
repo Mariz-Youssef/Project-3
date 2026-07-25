@@ -39,5 +39,12 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Repositories
                 .FirstOrDefaultAsync(
                     x => x.DoctorId == doctorId && x.DayOfWeek == dayOfWeek, cancellationToken);
         }
+        public async Task<List<DoctorWorkingHour>> GetByDoctorAsync(int doctorId,CancellationToken cancellationToken)
+        {
+            return await _context.DoctorWorkingHours
+                .Where(w => w.DoctorId == doctorId)
+                .OrderBy(w => w.DayOfWeek)
+                .ToListAsync(cancellationToken);
+        }
     }
 }

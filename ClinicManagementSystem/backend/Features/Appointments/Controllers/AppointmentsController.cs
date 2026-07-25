@@ -309,6 +309,25 @@ namespace ClinicManagementSystem.backend.Features.Appointments.Controllers
 
             return Ok(ApiResponseFactory.Success(true, "Appointment", ResponseAction.Deleted));
         }
+        /// <summary>
+        /// Returns all available appointment slots for a doctor on a specific date.
+        /// </summary>
+        [HttpGet("available-slots")]
+        [Authorize]
+        [ProducesResponseType(typeof(ApiResponse<IEnumerable<AvailableSlotResponse>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAvailableSlots([FromQuery] int doctorId,[FromQuery] DateOnly date,CancellationToken cancellationToken)
+        {
+            var result = await _appointmentService.GetAvailableSlotsAsync(
+                doctorId,
+                date,
+                cancellationToken);
+
+            return Ok(
+                ApiResponseFactory.Success(
+                    result,
+                    "Available Slots",
+                    ResponseAction.RetrievedList));
+        }
 
     }
 }

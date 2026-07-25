@@ -58,7 +58,7 @@ namespace ClinicManagementSystem.backend.Features.Appointments.Interfaces
         /// Cancels a pending or confirmed appointment.
         /// </summary>
         Task<AppointmentResponseDto> CancelAsync(int appointmentId, CancellationToken cancellationToken = default);
-
+        Task<IEnumerable<AvailableSlotResponse>> GetAvailableSlotsAsync(int doctorId,DateOnly date,CancellationToken cancellationToken);
 
     }
 }

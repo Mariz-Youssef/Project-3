@@ -27,6 +27,7 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Interfaces
         Task<DoctorWorkingHour?> GetWorkingHoursAsync(int doctorId, DayOfWeek dayOfWeek, CancellationToken cancellationToken = default);
 
 
+        public Task<List<DoctorWorkingHour>> GetByDoctorAsync(int doctorId, CancellationToken cancellationToken);
 
     }
 }

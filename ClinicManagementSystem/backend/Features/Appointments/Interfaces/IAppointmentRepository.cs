@@ -108,6 +108,6 @@ namespace ClinicManagementSystem.backend.Features.Appointments.Interfaces
         Task<bool> PatientHasOverlappingAppointmentAsync(int patientId, DateOnly appointmentDate, TimeOnly startTime, TimeOnly endTime, int? excludeAppointmentId = null,
             CancellationToken cancellationToken = default);
 
-
+        Task<List<Appointment>> GetDoctorAppointmentsByDateAsync(int doctorId,DateOnly date,CancellationToken cancellationToken);
     }
 }
