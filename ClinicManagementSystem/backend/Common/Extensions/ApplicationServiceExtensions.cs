@@ -1,4 +1,6 @@
-﻿using ClinicManagementSystem.backend.Data;
+﻿using ClinicManagementSystem.backend.Common.Services;
+using ClinicManagementSystem.backend.Common.Services.Interfaces;
+using ClinicManagementSystem.backend.Data;
 using ClinicManagementSystem.backend.Features.Appointments.Interfaces;
 using ClinicManagementSystem.backend.Features.Appointments.Repositories;
 using ClinicManagementSystem.backend.Features.Appointments.Services;
@@ -8,13 +10,14 @@ using ClinicManagementSystem.backend.Features.DepartmentFeature.Interfaces;
 using ClinicManagementSystem.backend.Features.DepartmentFeature.Repositories;
 using ClinicManagementSystem.backend.Features.DepartmentFeature.Services;
 using ClinicManagementSystem.backend.Features.Doctors.DependencyInjection;
+using ClinicManagementSystem.backend.Features.MedicalRecords.Interfaces;
+using ClinicManagementSystem.backend.Features.MedicalRecords.Repositories;
+using ClinicManagementSystem.backend.Features.MedicalRecords.Services;
 using ClinicManagementSystem.backend.Features.Patients.Interfaces;
 using ClinicManagementSystem.backend.Features.Patients.Repositories;
 using ClinicManagementSystem.backend.Features.Patients.Services;
 using ClinicManagementSystem.backend.Persistence.Interfaces;
 using ClinicManagementSystem.backend.Persistence.Repositories;
-using ClinicManagementSystem.backend.Common.Services;
-using ClinicManagementSystem.backend.Common.Services.Interfaces;
 
 namespace ClinicManagementSystem.backend.Common.Extensions
 {
@@ -45,6 +48,8 @@ namespace ClinicManagementSystem.backend.Common.Extensions
             services.AddScoped<IPatientService, PatientService>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
+            services.AddScoped<IMedicalRecordsService, MedicalRecordsService>();
             services.AddDoctorFeature();
 
             //Get AuthenticatedUser info

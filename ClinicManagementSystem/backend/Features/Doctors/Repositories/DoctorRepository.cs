@@ -63,5 +63,12 @@ namespace ClinicManagementSystem.backend.Features.Doctors.Repositories
                     d => d.Id == doctorId,
                     cancellationToken);
         }
+
+        /// <inheritdoc/>
+        public async Task<Doctor?> GetByUserIdAsync(int userId, CancellationToken cancellationToken = default)
+        {
+            return await Query()
+                .FirstOrDefaultAsync(doctor => doctor.UserId == userId, cancellationToken);
+        }
     }
 }

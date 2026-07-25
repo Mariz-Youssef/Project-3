@@ -34,14 +34,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="backend\Features\MedicalRecords\Controllers\" />
-    <Folder Include="backend\Features\MedicalRecords\Repositories\" />
+    <Folder Include="backend\Features\Prescriptions\" />
     <Folder Include="backend\Features\Patients\Controllers\" />
     <Folder Include="backend\Features\Patients\Repositories\" />
-    <Folder Include="backend\Features\MedicalRecords\DTOs\" />
-    <Folder Include="backend\Features\MedicalRecords\Interfaces\" />
-    <Folder Include="backend\Features\MedicalRecords\Services\" />
-    <Folder Include="backend\Features\MedicalRecords\Validators\" />
     <Folder Include="backend\Features\Patients\DTOs\" />
     <Folder Include="backend\Features\Patients\Interfaces\" />
     <Folder Include="backend\Features\Patients\Services\" />

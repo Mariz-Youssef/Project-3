@@ -1,36 +1,68 @@
-using ClinicManagementSystem.backend.Common.Pagination;
+﻿using ClinicManagementSystem.backend.Common.Pagination;
 using ClinicManagementSystem.backend.Models;
 using ClinicManagementSystem.backend.Persistence.Interfaces;
 
-namespace ClinicManagementSystem.backend.Features.MedicalRecords.Interfaces;
-
-/// <summary>
-/// Provides medical-record-specific data access operations.
-/// </summary>
-public interface IMedicalRecordRepository : IGenericRepository<MedicalRecord>
+namespace ClinicManagementSystem.backend.Features.MedicalRecords.Interfaces
 {
     /// <summary>
-    /// Gets a medical record by appointment identifier.
+    /// Provides medical record-specific data access operations.
     /// </summary>
-    Task<MedicalRecord?> GetByAppointmentIdAsync(int appointmentId, CancellationToken cancellationToken = default);
+    public interface IMedicalRecordRepository : IGenericRepository<MedicalRecord>
+    {
+        /// <summary>
+        /// Retrieves a medical record with all related entities.
+        /// </summary>
+        /// <param name="medicalRecordId">
+        /// Medical record identifier.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Cancellation token.
+        /// </param>
+        /// <returns>
+        /// The medical record if found; otherwise <see langword="null"/>.
+        /// </returns>
+        Task<MedicalRecord?> GetByIdWithDetailsAsync(int medicalRecordId, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Gets paginated medical history for a patient.
-    /// </summary>
-    Task<PagedResult<MedicalRecord>> GetPatientHistoryAsync(int patientId, PaginationParameters pagination, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Returns all medical records with related entities.
+        /// </summary>
+        IQueryable<MedicalRecord> QueryWithDetails();
 
-    /// <summary>
-    /// Gets paginated medical history for a patient scoped to a doctor.
-    /// </summary>
-    Task<PagedResult<MedicalRecord>> GetPatientHistoryByDoctorAsync(int patientId, int doctorId, PaginationParameters pagination, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Gets a medical record by identifier including appointment/doctor/patient details.
-    /// </summary>
-    Task<MedicalRecord?> GetByIdWithDetailsAsync(int medicalRecordId, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Determines whether a medical record already exists
+        /// for the specified appointment.
+        /// </summary>
+        /// <param name="appointmentId">
+        /// Appointment identifier.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Cancellation token.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a medical record already exists;
+        /// otherwise <see langword="false"/>.
+        /// </returns>
+        Task<bool> ExistsByAppointmentAsync(int appointmentId, CancellationToken cancellationToken = default);
 
-    /// <summary>
-    /// Gets a tracked medical record entity by identifier for update flows.
-    /// </summary>
-    Task<MedicalRecord?> GetByIdForUpdateAsync(int medicalRecordId, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Returns a paginated collection of all medical records.
+        /// </summary>
+        Task<PagedResult<MedicalRecord>> GetAllPagedAsync(PaginationParameters pagination, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Returns a paginated collection of medical records
+        /// belonging to the specified doctor.
+        /// </summary>
+        Task<PagedResult<MedicalRecord>> GetDoctorRecordsPagedAsync(int doctorId, PaginationParameters pagination, CancellationToken cancellationToken = default);
+
+
+        /// <summary>
+        /// Returns a paginated collection of medical records
+        /// belonging to the specified patient.
+        /// </summary>
+        Task<PagedResult<MedicalRecord>> GetPatientRecordsPagedAsync(int patientId, PaginationParameters pagination, CancellationToken cancellationToken = default);
+
+
+    }
 }
