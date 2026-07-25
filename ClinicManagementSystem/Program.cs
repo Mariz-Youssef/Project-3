@@ -1,6 +1,6 @@
 using ClinicManagementSystem.backend.Common.Extensions;
-using ClinicManagementSystem.backend.Common.RateLimiting;
 using ClinicManagementSystem.backend.Features.Doctors.DependencyInjection;
+using ClinicManagementSystem.backend.Middleware;
 using System.Text.Json.Serialization;
 
 namespace ClinicManagementSystem

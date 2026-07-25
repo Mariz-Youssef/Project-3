@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 
-namespace ClinicManagementSystem.backend.Common.RateLimiting
+namespace ClinicManagementSystem.backend.Middleware
 {
     /// <summary>
     /// Provides extension methods for configuring rate limiting.
     /// </summary>
-    public static class RateLimitingExtensions
+    public static class RateLimitingMiddleware
     {
         /// <summary>
         /// Registers application rate limiting.
@@ -28,7 +28,7 @@ namespace ClinicManagementSystem.backend.Common.RateLimiting
                         partitionKey: clientIp,
                         factory: _ => new FixedWindowRateLimiterOptions
                         {
-                            PermitLimit = 15,
+                            PermitLimit = 30,
                             Window = TimeSpan.FromMinutes(1),
                             QueueLimit = 0,
                             QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
