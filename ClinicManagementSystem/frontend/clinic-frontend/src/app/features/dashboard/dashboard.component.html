@@ -1,0 +1,35 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <p>Welcome to the Clinic Management System</p>
+  </div>
+
+  <div class="stats-container">
+    <div class="stats-row">
+      <div class="stat-card" *ngFor="let stat of stats">
+        <div class="stat-icon">
+          <span class="material-icons">{{ stat.icon }}</span>
+        </div>
+        <div class="stat-info">
+          <h3>{{ stat.title }}</h3>
+          <p>{{ stat.value }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="activities-container">
+    <h2>Recent Activities</h2>
+    <div class="activities-list">
+      <div class="activity-item" *ngFor="let activity of recentActivities">
+        <div class="activity-icon">
+          <span class="material-icons">{{ activity.icon }}</span>
+        </div>
+        <div class="activity-content">
+          <h4>{{ activity.description }}</h4>
+          <p class="time">{{ activity.time }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

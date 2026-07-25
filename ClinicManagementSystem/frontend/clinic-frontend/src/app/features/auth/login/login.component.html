@@ -1,0 +1,41 @@
+<div class="login-container">
+  <div class="login-box">
+    <h2>Clinic Management System</h2>
+    <h4>Sign In</h4>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" formControlName="email" id="email" class="form-control" 
+               [class.is-invalid]="submitted && f.email.errors">
+        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+          <div *ngIf="f.email.errors.required">Email is required</div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" formControlName="password" id="password" class="form-control"
+               [class.is-invalid]="submitted && f.password.errors">
+        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+          <div *ngIf="f.password.errors.required">Password is required</div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="loading">
+          <span *ngIf="loading">Signing in...</span>
+          <span *ngIf="!loading">Sign In</span>
+        </button>
+      </div>
+      
+      <div class="form-group mt-3">
+        <a routerLink="/register" class="link">Don't have an account? Register</a>
+      </div>
+      
+      <div *ngIf="error" class="alert alert-danger mt-3">
+        {{ error }}
+      </div>
+    </form>
+  </div>
+</div>

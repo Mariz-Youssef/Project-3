@@ -1,0 +1,99 @@
+<mat-card class="example-card">
+  <mat-card-header>
+    <mat-card-title>Create New Patient</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="patientForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+      <mat-form-field class="full-width">
+        <mat-label>First Name</mat-label>
+        <input matInput placeholder="First Name" formControlName="firstName">
+        <mat-error *ngIf="f.firstName.errors?.['required']">
+          First name is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Last Name</mat-label>
+        <input matInput placeholder="Last Name" formControlName="lastName">
+        <mat-error *ngIf="f.lastName.errors?.['required']">
+          Last name is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" placeholder="you@example.com" formControlName="email">
+        <mat-error *ngIf="f.email.errors?.['required']">
+          Email is required
+        </mat-error>
+        <mat-error *ngIf="f.email.errors?.['email']">
+          Please enter a valid email
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Phone</mat-label>
+        <input matInput type="tel" placeholder="Phone number" formControlName="phone">
+        <mat-error *ngIf="f.phone.errors?.['required']">
+          Phone number is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Date of Birth</mat-label>
+        <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="dateOfBirth">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="f.dateOfBirth.errors?.['required']">
+          Date of birth is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Gender</mat-label>
+        <mat-select formControlName="gender">
+          <mat-option value="">-- Select gender --</mat-option>
+          <mat-option value="Male">Male</mat-option>
+          <mat-option value="Female">Female</mat-option>
+          <mat-option value="Other">Other</mat-option>
+        </mat-select>
+        <mat-error *ngIf="f.gender.errors?.['required']">
+          Gender is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Address</mat-label>
+        <input matInput placeholder="Address" formControlName="address">
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>City</mat-label>
+        <input matInput placeholder="City" formControlName="city">
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>State</mat-label>
+        <input matInput placeholder="State" formControlName="state">
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>ZIP Code</mat-label>
+        <input matInput placeholder="ZIP Code" formControlName="zipCode">
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+  <mat-card-actions class="button-row">
+    <button mat-button (click)="onCancel()" *ngIf="!loading">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="patientForm.invalid || loading">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+      Submit
+    </button>
+  </mat-card-actions>
+  <div *ngIf="loading" class="progress-container">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
+  <div *ngIf="error" class="error-message mat-body-strong mat-color--error">
+    {{ error }}
+  </div>
+</mat-card>

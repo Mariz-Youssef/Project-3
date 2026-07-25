@@ -1,0 +1,19 @@
+.example-card {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.button-row {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.button-row button {
+  margin-left: 8px;
+}

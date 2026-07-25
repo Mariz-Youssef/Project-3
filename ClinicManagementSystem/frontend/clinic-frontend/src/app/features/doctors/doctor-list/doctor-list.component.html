@@ -1,0 +1,117 @@
+<mat-toolbar color="primary">
+  <span>Doctor List</span>
+  <span class="spacer"></span>
+  <mat-form-field appearance="fill">
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. doctor">
+  </mat-form-field>
+  <button mat-button color="warn" (click)="createDoctor()" *ngIf="!loading">
+    <mat-icon>person_add</mat-icon> New Doctor
+  </button>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+</mat-toolbar>
+
+<mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+  <!-- Checkbox Column -->
+  <ng-container matColumnDef="select">
+    <mat-header-cell *matHeaderCellDef>
+      <mat-checkbox (change)="$event ? masterToggle() : null"
+                    [checked]="isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                    [aria-label]="checkboxLabel()">
+      </mat-checkbox>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <mat-checkbox (click)="$event.stopPropagation()
+                                (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)"
+                    [aria-label]="checkboxLabel(row)">
+      </mat-checkbox>
+    </mat-cell>
+  </ng-container>
+
+  <!-- Id Column -->
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+    <mat-cell *matCellDef="let doctor"> {{doctor.id}} </mat-cell>
+  </ng-container>
+
+  <!-- First Name Column -->
+  <ng-container matColumnDef="firstName">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> First Name </mat-header-cell>
+    <mat-cell *matCellDef="let doctor"> {{doctor.firstName}} </mat-cell>
+  </ng-container>
+
+  <!-- Last Name Column -->
+  <ng-container matColumnDef="lastName">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Last Name </mat-header-cell>
+    <mat-cell *matCellDef="let doctor"> {{doctor.lastName}} </mat-cell>
+  </ng-container>
+
+  <!-- Email Column -->
+  <ng-container matColumnDef="email">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
+    <mat-cell *matCellDef="let doctor"> {{doctor.email}} </mat-cell>
+  </ng-container>
+
+  <!-- Phone Column -->
+  <ng-container matColumnDef="phone">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Phone </mat-header-cell>
+    <mat-cell *matCellDef="let doctor"> {{doctor.phone}} </mat-cell>
+  </ng-container>
+
+  <!-- Specialization Column -->
+  <ng-container matColumnDef="specialization">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Specialization </mat-header-cell>
+    <mat-cell *matCellDef="let doctor"> {{doctor.specialization}} </mat-cell>
+  </ng-container>
+
+  <!-- Experience Years Column -->
+  <ng-container matColumnDef="experienceYears">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Experience (Years) </mat-header-cell>
+    <mat-cell *matCellDef="let doctor"> {{doctor.experienceYears}} </mat-cell>
+  </ng-container>
+
+  <!-- Consultation Fee Column -->
+  <ng-container matColumnDef="consultationFee">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Consultation Fee </mat-header-cell>
+    <mat-cell *matCellDef="let doctor"> ${{doctor.consultationFee}} </mat-cell>
+  </ng-container>
+
+  <!-- Availability Column -->
+  <ng-container matColumnDef="isAvailable">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Available </mat-header-cell>
+    <mat-cell *matCellDef="let doctor">
+      <mat-checkbox [checked]="doctor.isAvailable" disabled></mat-checkbox>
+    </mat-cell>
+  </ng-container>
+
+  <!-- Actions Column -->
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+    <mat-cell *matCellDef="let doctor">
+      <button mat-icon-button color="primary" [routerLink]="['/doctors/view', doctor.id]" aria-label="View">
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button mat-icon-button color="accent" [routerLink]="['/doctors/edit', doctor.id]" aria-label="Edit">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="deleteDoctor(doctor.id)" aria-label="Delete">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"
+           (click)="selection.toggle(row)"
+           [class.selected]="selection.isSelected(row)">
+  </mat-row>
+</mat-table>
+
+<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"
+               showFirstLastButtons
+               aria-label="Select page"
+               *ngIf="dataSource.data.length > 0">
+</mat-paginator>

@@ -1,0 +1,34 @@
+/* Patient List Component Styles */
+.mat-elevation-z8 {
+  margin: 20px;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 200px;
+}
+
+.mat-column-select {
+  min-width: 48px;
+  max-width: 48px;
+}
+
+.mat-column-actions {
+  min-width: 120px;
+  max-width: 120px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .mat-form-field {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  mat-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .spread, but we can't do exactly; just something.
+  }
+}

@@ -1,0 +1,178 @@
+.dashboard-container {
+  padding: 2rem;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-header p {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+.stats-container {
+  margin-bottom: 2rem;
+}
+
+.stats-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-icon .material-icons {
+  font-size: 2.5rem;
+}
+
+.stat-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+  font-size: 1.2rem;
+}
+
+.stat-info p {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #3498db;
+}
+
+/* Different colors for different stats */
+.stat-card:nth-child(1) .stat-info p {
+  color: #3498db; /* blue */
+}
+
+.stat-card:nth-child(2) .stat-info p {
+  color: #2ecc71; /* green */
+}
+
+.stat-card:nth-child(3) .stat-info p {
+  color: #f39c12; /* orange */
+}
+
+.stat-card:nth-child(4) .stat-info p {
+  color: #9b59b6; /* purple */
+}
+
+.activities-container h2 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+}
+
+.activity-icon {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.activity-icon .material-icons {
+  font-size: 1.5rem;
+}
+
+.activity-content h4 {
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+}
+
+.activity-content p {
+  margin: 0;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+/* Different colors for different activity types */
+.activity-item:nth-child(1) .activity-icon {
+  background-color: #d4efdf;
+  color: #2ecc71;
+}
+
+.activity-item:nth-child(2) .activity-icon {
+  background-color: #d6eaf8;
+  color: #3498db;
+}
+
+.activity-item:nth-child(3) .activity-icon {
+  background-color: #fadbd8;
+  color: #e74c3c;
+}
+
+.activity-item:nth-child(4) .activity-icon {
+  background-color: #fdeaa7;
+  color: #f1c40f;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+  
+  .stats-row {
+    flex-direction: column;
+  }
+  
+  .stat-card {
+    min-width: 100%;
+  }
+  
+  .activity-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .activity-icon {
+    margin-bottom: 1rem;
+  }
+}

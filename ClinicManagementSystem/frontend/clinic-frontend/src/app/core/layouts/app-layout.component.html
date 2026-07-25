@@ -1,0 +1,59 @@
+<div class="app-layout">
+  <aside class="sidebar" [class.collapsed]="!sidebarOpened">
+    <div class="sidebar-header">
+      <h3>Clinic Management</h3>
+      <button (click)="toggleSidebar()" class="toggle-btn">
+        <span class="material-icons">menu</span>
+      </button>
+    </div>
+    <nav class="sidebar-nav">
+      <a routerLink="/dashboard" routerLinkActive="active" *ngIf="sidebarOpened">
+        <span class="material-icons">dashboard</span>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/patients" routerLinkActive="active">
+        <span class="material-icons">people</span>
+        <span>Patients</span>
+      </a>
+      <a routerLink="/doctors" routerLinkActive="active">
+        <span class="material-icons">person</span>
+        <span>Doctors</span>
+      </a>
+      <a routerLink="/appointments" routerLinkActive="active">
+        <span class="material-icons">calendar_today</span>
+        <span>Appointments</span>
+      </a>
+      <a routerLink="/medical-records" routerLinkActive="active">
+        <span class="material-icons">description</span>
+        <span>Medical Records</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button (click)="logout()" class="btn-logout">
+        <span class="material-icons">logout</span>
+        <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="app-header">
+      <div class="header-left">
+        <button class="menu-toggle" (click)="toggleSidebar()" *ngIf="!sidebarOpened">
+          <span class="material-icons">menu</span>
+        </button>
+        <h2>Clinic Management System</h2>
+      </div>
+      <div class="header-right">
+        <div class="user-info">
+          <span>{{ getUserName() }}</span>
+          <img src="assets/default-avatar.png" alt="User Avatar" class="avatar">
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
