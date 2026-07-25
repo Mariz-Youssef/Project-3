@@ -20,6 +20,7 @@ namespace ClinicManagementSystem
             builder.Services.AddIdentityServices();
             builder.Services.AddAuthenticationServices(builder.Configuration);
             builder.Services.AddAuthorizationServices();
+            builder.Services.AddGoogleAuthentication(builder.Configuration);
 
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
             builder.Services.AddApplicationServices();

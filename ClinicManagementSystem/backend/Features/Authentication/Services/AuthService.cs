@@ -5,7 +5,8 @@ using ClinicManagementSystem.backend.Common.Exceptions.CustomExceptions;
 using ClinicManagementSystem.backend.Common.Responses;
 using ClinicManagementSystem.backend.Common.Settings;
 using ClinicManagementSystem.backend.Data;
-using ClinicManagementSystem.backend.Features.Authentication.DTOs;
+using ClinicManagementSystem.backend.Features.Authentication.DTOs.Requests;
+using ClinicManagementSystem.backend.Features.Authentication.DTOs.Responses;
 using ClinicManagementSystem.backend.Features.Authentication.Interfaces;
 using ClinicManagementSystem.backend.Models;
 using Microsoft.AspNetCore.Identity;
@@ -20,10 +21,10 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
-        private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
-        private readonly JwtSettings _jwtSettings;
         private readonly ApplicationDbContext _context;
+        private readonly IAuthTokenIssuer _authTokenIssuer;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthService"/> class.
@@ -31,17 +32,16 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Services
         public AuthService(
             UserManager<ApplicationUser> userManager,
             IRefreshTokenRepository refreshTokenRepository,
-            ITokenService tokenService,
+
             IMapper mapper,
-            IOptions<JwtSettings> jwtSettings,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IAuthTokenIssuer authTokenIssuer)
         {
             _userManager = userManager;
             _refreshTokenRepository = refreshTokenRepository;
-            _tokenService = tokenService;
             _mapper = mapper;
-            _jwtSettings = jwtSettings.Value;
             _context = context;
+            _authTokenIssuer = authTokenIssuer;
         }
 
        
@@ -115,16 +115,16 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Services
 
             await _userManager.ResetAccessFailedCountAsync(user);
 
-            return await GenerateAuthResponseAsync(
-                user,
-                ipAddress,
-                cancellationToken);
+            return await _authTokenIssuer.IssueTokensAsync(
+                 user,
+                 ipAddress,
+                 cancellationToken);
         }
         /// <inheritdoc />
         public async Task<AuthResponseDto> RefreshTokenAsync(
-     string refreshToken,
-     string? ipAddress,
-     CancellationToken cancellationToken = default)
+            string refreshToken,
+            string? ipAddress,
+            CancellationToken cancellationToken = default)
         {
             var storedToken =
                 await _refreshTokenRepository.GetByTokenAsync(
@@ -138,7 +138,6 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Services
 
             if (storedToken.RevokedAt is not null)
             {
-                
                 await _refreshTokenRepository.RevokeDescendantsAsync(
                     storedToken,
                     ipAddress,
@@ -158,19 +157,16 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Services
             storedToken.RevokedAt = DateTime.UtcNow;
             storedToken.RevokedByIp = ipAddress;
 
-            var replacementToken =
-                await CreateRefreshTokenAsync(
-                    storedToken.UserId,
-                    ipAddress,
-                    cancellationToken);
+            var response = await _authTokenIssuer.IssueTokensAsync(
+                storedToken.User,
+                ipAddress,
+                cancellationToken);
 
-            storedToken.ReplacedByToken = replacementToken.Token;
+            storedToken.ReplacedByToken = response.RefreshToken;
 
             await _refreshTokenRepository.SaveChangesAsync(cancellationToken);
 
-            return await BuildAuthResponseAsync(
-                storedToken.User,
-                replacementToken);
+            return response;
         }
         /// <inheritdoc/>
         public async Task RevokeTokenAsync(
@@ -189,9 +185,8 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Services
 
             storedToken.RevokedAt = DateTime.UtcNow;
             storedToken.RevokedByIp = ipAddress;
-            await _context.SaveChangesAsync(cancellationToken);
 
-            //await _refreshTokenRepository.SaveChangesAsync(cancellationToken);
+            await _refreshTokenRepository.SaveChangesAsync(cancellationToken);
         }
 
 
@@ -221,85 +216,14 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Services
             await _refreshTokenRepository.RevokeAllForUserAsync(userId, cancellationToken);
         }
 
-
-
-
-
-
-
-
-        /// <summary>
-        /// Generates a new access/refresh token pair for the given user,
-        /// persists the refresh token, and maps the result to <see cref="AuthResponseDto"/>.
-        /// </summary>
-        private async Task<AuthResponseDto> GenerateAuthResponseAsync(
-   ApplicationUser user,
-   string? ipAddress,
-   CancellationToken cancellationToken)
-        {
-            var refreshToken =
-                await CreateRefreshTokenAsync(
-                    user.Id,
-                    ipAddress,
-                    cancellationToken);
-
-            await _refreshTokenRepository.SaveChangesAsync(cancellationToken);
-
-            return await BuildAuthResponseAsync(
-                user,
-                refreshToken);
-        }
-
-        private async Task<AuthResponseDto> BuildAuthResponseAsync(
-     ApplicationUser user,
-     RefreshToken refreshToken)
-        {
-            var roles = await _userManager.GetRolesAsync(user);
-
-            var (accessToken, expiresAt) =
-                _tokenService.GenerateAccessToken(user, roles);
-
-            var response = _mapper.Map<AuthResponseDto>(user);
-
-            response.Roles = roles;
-            response.AccessToken = accessToken;
-            response.AccessTokenExpiresAt = expiresAt;
-            response.RefreshToken = refreshToken.Token;
-            response.RefreshTokenExpiresAt = refreshToken.ExpiresAt;
-
-            return response;
-        }
-
-
-        private async Task<RefreshToken> CreateRefreshTokenAsync(
-    int userId,
-    string? ipAddress,
-    CancellationToken cancellationToken)
-        {
-            var refreshToken = new RefreshToken
-            {
-                Token = _tokenService.GenerateRefreshTokenValue(),
-                UserId = userId,
-                CreatedByIp = ipAddress,
-                ExpiresAt = DateTime.UtcNow.AddDays(
-                    _jwtSettings.RefreshTokenExpirationDays)
-            };
-
-            await _refreshTokenRepository.AddAsync(
-                refreshToken,
-                cancellationToken);
-
-            return refreshToken;
-        }
-
-
         /// <summary>
         /// Creates a new Identity user and assigns the specified role.
         /// </summary>
         private async Task CreateUserAsync(
      ApplicationUser user,
      string password,
-     string role)
+     string role,
+     CancellationToken cancellationToken=default)
         {
             var existingUser = await _userManager.FindByEmailAsync(user.Email!);
 
@@ -309,7 +233,7 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Services
                     ResponseMessageBuilder.AlreadyExists("User"));
             }
 
-            await using var transaction = await _context.Database.BeginTransactionAsync();
+            await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 
             var createResult = await _userManager.CreateAsync(user, password);
 
@@ -327,7 +251,7 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Services
                     roleResult.Errors.Select(e => e.Description));
             }
 
-            await transaction.CommitAsync();
+            await transaction.CommitAsync(cancellationToken);
         }
 
 

@@ -1,7 +1,8 @@
 ﻿using ClinicManagementSystem.backend.Common.Constants;
 using ClinicManagementSystem.backend.Common.Extensions;
 using ClinicManagementSystem.backend.Common.Responses;
-using ClinicManagementSystem.backend.Features.Authentication.DTOs;
+using ClinicManagementSystem.backend.Features.Authentication.DTOs.Requests;
+using ClinicManagementSystem.backend.Features.Authentication.DTOs.Responses;
 using ClinicManagementSystem.backend.Features.Authentication.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +18,19 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IGoogleAuthenticationService _googleAuthenticationService;
+
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthController"/> class.
         /// </summary>
         /// <param name="authService">The authentication service.</param>
-        public AuthController(IAuthService authService)
+        /// <param name="googleAuthenticationService">The Google Sign-In authentication service.</param>
+        public AuthController(IAuthService authService, IGoogleAuthenticationService googleAuthenticationService)
         {
             _authService = authService;
+            _googleAuthenticationService = googleAuthenticationService;
         }
 
         /// <summary>
@@ -176,20 +182,50 @@ namespace ClinicManagementSystem.backend.Features.Authentication.Controllers
             CancellationToken cancellationToken)
         {
             await _authService.ChangePasswordAsync(
-                 User.GetUserId(),
-                 request,
-                 cancellationToken);
+                User.GetUserId(),
+                request,
+                cancellationToken);
 
             return Ok(
                 ApiResponseFactory.Success(
                     "Password",
                     ResponseAction.Updated));
         }
+
+        /// <summary>
+        /// Authenticates a user via Google Sign-In. Automatically creates a
+        /// patient account on first sign-in if no matching account exists.
+        /// </summary>
+        /// <param name="request">The Google ID token to validate.</param>
+        /// <param name="cancellationToken">Token used to observe request cancellation.</param>
+        /// <response code="200">Login succeeded.</response>
+        /// <response code="401">The Google token is invalid or expired.</response>
+        [HttpPost("google")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ApiResponse<AuthResponseDto>>> GoogleLogin(
+            GoogleLoginRequestDto request,
+            CancellationToken cancellationToken)
+        {
+            var result = await _googleAuthenticationService.LoginAsync(
+                request,
+                GetClientIp(),
+                cancellationToken);
+
+            return Ok(
+                ApiResponseFactory.Success(
+                    result,
+                    "Authentication",
+                    ResponseAction.Retrieved));
+        }
+
         /// <summary>
         /// Retrieves the caller's IP address for auditing refresh token activity.
         /// </summary>
         private string? GetClientIp() => HttpContext.Connection.RemoteIpAddress?.ToString();
     }
-
 }
+            
+        
+        
+ 
 

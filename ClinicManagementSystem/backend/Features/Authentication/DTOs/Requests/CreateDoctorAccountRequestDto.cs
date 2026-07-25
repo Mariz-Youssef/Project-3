@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ClinicManagementSystem.backend.Features.Authentication.DTOs
+namespace ClinicManagementSystem.backend.Features.Authentication.DTOs.Requests
 {
     /// <summary>
     /// Request payload used by an Admin to create a Doctor's login identity.
