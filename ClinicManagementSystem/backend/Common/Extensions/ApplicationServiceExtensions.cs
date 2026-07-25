@@ -16,6 +16,9 @@ using ClinicManagementSystem.backend.Features.MedicalRecords.Services;
 using ClinicManagementSystem.backend.Features.Patients.Interfaces;
 using ClinicManagementSystem.backend.Features.Patients.Repositories;
 using ClinicManagementSystem.backend.Features.Patients.Services;
+using ClinicManagementSystem.backend.Features.Prescriptions.Interfaces;
+using ClinicManagementSystem.backend.Features.Prescriptions.Repositories;
+using ClinicManagementSystem.backend.Features.Prescriptions.Services;
 using ClinicManagementSystem.backend.Persistence.Interfaces;
 using ClinicManagementSystem.backend.Persistence.Repositories;
 
@@ -50,6 +53,8 @@ namespace ClinicManagementSystem.backend.Common.Extensions
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
             services.AddScoped<IMedicalRecordsService, MedicalRecordsService>();
+            services.AddScoped<IPrescriptionsRepository, PrescriptionsRepository>();
+            services.AddScoped<IPrescriptionsService, PrescriptionsService>();
             services.AddDoctorFeature();
 
             //Get AuthenticatedUser info

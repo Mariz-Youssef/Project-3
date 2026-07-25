@@ -50,7 +50,7 @@ namespace ClinicManagementSystem.backend.Features.DepartmentFeature.Controllers
         /// The authenticated user does not have permission to access this resource.
         /// </response>
 
-        [Authorize(Roles = $"{RoleNames.Admin},{RoleNames.Doctor},{RoleNames.Patient}")]
+        [Authorize(Policy = "AdminOrDoctorOrPatient")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -80,8 +80,8 @@ namespace ClinicManagementSystem.backend.Features.DepartmentFeature.Controllers
         /// <response code="403">The authenticated user is not authorized.</response>
         /// <response code="404">Department not found.</response>
 
-      
-        [Authorize(Roles = $"{RoleNames.Admin},{RoleNames.Doctor},{RoleNames.Patient}")]
+
+        [Authorize(Policy = "AdminOrDoctorOrPatient")]
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -116,7 +116,7 @@ namespace ClinicManagementSystem.backend.Features.DepartmentFeature.Controllers
         /// <response code="401">Authentication is required.</response>
         /// <response code="403">The authenticated user is not authorized.</response>
 
-        [Authorize(Roles = $"{RoleNames.Admin},{RoleNames.Doctor},{RoleNames.Patient}")]
+        [Authorize(Policy = "AdminOrDoctorOrPatient")]
         [HttpGet("search")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -148,8 +148,8 @@ namespace ClinicManagementSystem.backend.Features.DepartmentFeature.Controllers
         /// <response code="403">The authenticated user is not authorized.</response>
         /// <response code="409">Department already exists.</response>
 
-       
-        [Authorize(Roles = $"{RoleNames.Admin}")]
+
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -185,8 +185,8 @@ namespace ClinicManagementSystem.backend.Features.DepartmentFeature.Controllers
         /// <response code="404">Department not found.</response>
         /// <response code="409">Department already exists.</response>
 
-        
-        [Authorize(Roles = $"{RoleNames.Admin}")]
+
+        [Authorize(Policy = "AdminOnly")]
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -220,7 +220,7 @@ namespace ClinicManagementSystem.backend.Features.DepartmentFeature.Controllers
         /// <response code="403">The authenticated user is not authorized.</response>
         /// <response code="404">Department not found.</response>
 
-        [Authorize(Roles = $"{RoleNames.Admin}")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

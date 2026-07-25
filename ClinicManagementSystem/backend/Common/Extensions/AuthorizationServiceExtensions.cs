@@ -22,6 +22,10 @@ namespace ClinicManagementSystem.backend.Common.Extensions
                 options.AddPolicy("PatientOnly", policy => policy.RequireRole(RoleNames.Patient));
                 options.AddPolicy("AdminOrDoctor", policy =>
                     policy.RequireRole(RoleNames.Admin, RoleNames.Doctor));
+
+                options.AddPolicy("AdminOrDoctorOrPatient",
+                    policy => policy.RequireRole(RoleNames.Admin, RoleNames.Doctor, RoleNames.Patient));
+
             });
 
             return services;

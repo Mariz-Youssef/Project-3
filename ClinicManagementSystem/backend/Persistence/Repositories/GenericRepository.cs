@@ -33,7 +33,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>where TEnti
 
     public async Task<TEntity?> GetByIdAsync(int id,CancellationToken cancellationToken = default)
     {
-        return await _dbSet.AsNoTracking().FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
+        return await _dbSet.FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
     }
 
     public async Task<IReadOnlyList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate,CancellationToken cancellationToken = default)
