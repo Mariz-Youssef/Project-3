@@ -29,5 +29,20 @@ export const appointmentsApi = {
     axiosClient.patch(`/Appointments/${id}/cancel`).then(unwrap),
 
   // AdminOnly
-  remove: (id) => axiosClient.delete(`/Appointments/${id}`).then(unwrap),
+    remove: (id) => axiosClient.delete(`/Appointments/${id}`).then(unwrap),
+
+    getWorkingHours: (doctorId) =>
+        axiosClient
+            .get(`/doctors/${doctorId}/working-hours`)
+            .then(res => res.data.data.items),
+
+    getAvailableSlots: (doctorId, date) =>
+        axiosClient
+            .get("/appointments/available-slots", {
+                params: {
+                    doctorId,
+                    date
+                }
+            })
+            .then(res => res.data.data)
 };

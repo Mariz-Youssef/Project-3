@@ -42,7 +42,35 @@ export function AppointmentsPage() {
         <Badge tone={STATUS_TONE[r.status] ?? "grey"}>{r.status ?? "—"}</Badge>
       ),
     },
-  ];
+    ];
+    useEffect(() => {
+        if (!initialValues) return;
+
+        async function loadExistingAppointment() {
+            try {
+                const hours = await doctorsApi.getWorkingHours(
+                    initialValues.doctorId
+                );
+
+                setWorkingHours(hours);
+
+                const date = new Date(initialValues.appointmentDate)
+                    .toISOString()
+                    .slice(0, 10);
+
+                const slots = await doctorsApi.getAvailableSlots(
+                    initialValues.doctorId,
+                    date
+                );
+
+                setAvailableSlots(slots);
+            } catch {
+                // ignore
+            }
+        }
+
+        loadExistingAppointment();
+    }, [initialValues]);
 
   return (
     <div className="page">

@@ -29,7 +29,9 @@ export function AppointmentForm({ initialValues, onSubmit, onCancel, submitLabel
   });
   const [doctors, setDoctors] = useState([]);
   const [error, setError] = useState(null);
-  const [saving, setSaving] = useState(false);
+const [saving, setSaving] = useState(false);
+const [workingHours, setWorkingHours] = useState([]);
+const [availableSlots, setAvailableSlots] = useState([]);
 
   useEffect(() => {
     doctorsApi
@@ -41,6 +43,60 @@ export function AppointmentForm({ initialValues, onSubmit, onCancel, submitLabel
   function update(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
+    async function handleDoctorChange(doctorId) {
+        update("doctorId", doctorId);
+
+        update("appointmentDate", "");
+        update("appointmentTime", "");
+
+        setWorkingHours([]);
+        setAvailableSlots([]);
+        setError(null);
+
+        if (!doctorId) return;
+
+        try {
+            const hours = await doctorsApi.getWorkingHours(doctorId);
+            setWorkingHours(hours);
+        } catch {
+            setError("Couldn't load doctor's working hours.");
+        }
+    }
+
+    async function handleDateChange(date) {
+        update("appointmentDate", date);
+        update("appointmentTime", "");
+
+        if (!form.doctorId) return;
+
+        const selectedDay = new Date(date).toLocaleDateString("en-US", {
+            weekday: "long",
+        });
+
+        const worksThatDay = workingHours.some(
+            (w) => w.dayOfWeek === selectedDay
+        );
+
+        if (!worksThatDay) {
+            setAvailableSlots([]);
+            setError("Doctor doesn't work on this day.");
+            return;
+        }
+
+        setError(null);
+
+        try {
+            const slots = await doctorsApi.getAvailableSlots(
+                form.doctorId,
+                date
+            );
+
+            setAvailableSlots(slots);
+        } catch {
+            setAvailableSlots([]);
+            setError("Couldn't load available slots.");
+        }
+    }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -51,11 +107,35 @@ export function AppointmentForm({ initialValues, onSubmit, onCancel, submitLabel
       return;
     }
 
-    const payload = {
-      doctorId: Number(form.doctorId),
-      appointmentDate: `${form.appointmentDate}T${form.appointmentTime}:00`,
-      reasonForVisit: form.reasonForVisit,
-    };
+      const [hours, minutes] = form.appointmentTime.split(":");
+
+      const endDate = new Date();
+      endDate.setHours(Number(hours));
+      endDate.setMinutes(Number(minutes));
+      endDate.setSeconds(0);
+
+      // Add the appointment duration (40 minutes)
+      endDate.setMinutes(endDate.getMinutes() + 40);
+
+      const endTime = `${String(endDate.getHours()).padStart(2, "0")}:${String(
+          endDate.getMinutes()
+      ).padStart(2, "0")}:00`;
+
+      const startTime =
+          form.appointmentTime.length === 5
+              ? `${form.appointmentTime}:00`
+              : form.appointmentTime;
+
+      const payload = {
+          doctorId: Number(form.doctorId),
+          appointmentDate: form.appointmentDate,
+          startTime,
+          endTime,
+          reason: form.reasonForVisit,
+          notes: "",
+      };
+
+      console.log(payload);
 
     setSaving(true);
     try {
@@ -77,8 +157,7 @@ export function AppointmentForm({ initialValues, onSubmit, onCancel, submitLabel
             id="appt-doctor"
             required
             value={form.doctorId}
-            onChange={(e) => update("doctorId", e.target.value)}
-          >
+            onChange={(e) => handleDoctorChange(e.target.value)}          >
             <option value="" disabled>
               Select a doctor
             </option>
@@ -91,23 +170,33 @@ export function AppointmentForm({ initialValues, onSubmit, onCancel, submitLabel
         </FormField>
 
         <FormField label="Date" htmlFor="appt-date">
-          <TextInput
-            id="appt-date"
-            type="date"
-            required
-            value={form.appointmentDate}
-            onChange={(e) => update("appointmentDate", e.target.value)}
-          />
+            <TextInput
+                id="appt-date"
+                type="date"
+                required
+                min={new Date().toISOString().split("T")[0]}
+                disabled={!form.doctorId}
+                value={form.appointmentDate}
+                onChange={(e) => handleDateChange(e.target.value)}
+            />
         </FormField>
 
-        <FormField label="Time" htmlFor="appt-time">
-          <TextInput
-            id="appt-time"
-            type="time"
-            required
-            value={form.appointmentTime}
-            onChange={(e) => update("appointmentTime", e.target.value)}
-          />
+        <FormField label="Available Time" htmlFor="appt-time">
+            <Select
+                id="appt-time"
+                required
+                disabled={!availableSlots.length}
+                value={form.appointmentTime}
+                onChange={(e) => update("appointmentTime", e.target.value)}
+            >
+                <option value="">Select a time</option>
+
+                {availableSlots.map((slot) => (
+                    <option key={slot.time} value={slot.time}>
+                        {slot.time}
+                    </option>
+                ))}
+            </Select>
         </FormField>
 
         <FormField label="Reason for visit" htmlFor="appt-reason" full>
