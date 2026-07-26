@@ -1,0 +1,23 @@
+$kind: http-request
+description: Updates a doctor's leave.
+url: "{{baseUrl}}/api/doctors/{{doctorId}}/leaves/{{leaveId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+pathVariables:
+  doctorId: "{{doctorId}}"
+  leaveId: "{{leaveId}}"
+body:
+  type: json
+  content: |-
+    {
+      "startDate": "2026-08-01",
+      "endDate": "2026-08-05",
+      "reason": "Regular checkup"
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Updates a doctor's leave.resources/examples
+order: 4000

@@ -1,0 +1,20 @@
+name: ClinicManagementSystem
+values:
+  - key: baseUrl
+    value: 'https://localhost:7070'
+  - key: token
+    value: ''
+  - key: refreshToken
+    value: ''
+  - key: patientId
+    value: ''
+  - key: doctorId
+    value: ''
+  - key: appointmentId
+    value: ''
+  - key: userId
+    value: ''
+  - key: roleId
+    value: ''
+  - key: departmentId
+    value: ''

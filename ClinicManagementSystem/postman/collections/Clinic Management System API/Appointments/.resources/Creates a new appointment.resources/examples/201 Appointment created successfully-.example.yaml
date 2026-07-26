@@ -1,0 +1,55 @@
+$kind: http-example
+name: 201 Appointment created successfully.
+request:
+  url: "{{baseUrl}}/api/Appointments"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "doctorId": 1,
+        "appointmentDate": "2026-08-01T10:00:00Z",
+        "startTime": "09:00:00",
+        "endTime": "17:00:00",
+        "reason": "Regular checkup",
+        "notes": "Patient responded well to treatment."
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: text
+    content: |-
+      {
+        "success": true,
+        "message": "string",
+        "data": {
+          "id": 1,
+          "doctorId": 1,
+          "doctorName": "string",
+          "patientId": 1,
+          "patientName": "string",
+          "appointmentDate": "2026-08-01T10:00:00Z",
+          "startTime": "09:00:00",
+          "endTime": "17:00:00",
+          "status": "Pending"
+        },
+        "errors": [
+          "string"
+        ],
+        "timestamp": "2026-07-25T09:00:00Z",
+        "traceId": "string",
+        "pagination": {
+          "pageNumber": 1,
+          "pageSize": 1,
+          "totalPages": 1,
+          "totalRecords": 1,
+          "hasNextPage": true,
+          "hasPreviousPage": true
+        }
+      }
+order: 1000

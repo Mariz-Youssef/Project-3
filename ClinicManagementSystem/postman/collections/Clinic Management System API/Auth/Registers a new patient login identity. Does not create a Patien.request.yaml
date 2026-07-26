@@ -1,0 +1,30 @@
+$kind: http-request
+name: Registers a new patient login identity. Does not create a Patient profile — the patient must complete their profile after logging in
+description: Registers a new patient login identity. Does not create a Patient profile — the patient must complete their profile after logging in.
+url: "{{baseUrl}}/api/auth/register"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "fullName": "John Doe",
+      "email": "john.doe@example.com",
+      "password": "P@ssw0rd123!",
+      "confirmPassword": "P@ssw0rd123!"
+    }
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: |-
+      if (pm.response.code === 200 || pm.response.code === 201) {
+          const response = pm.response.json();
+          const data = response.data || response;
+          if (data && data.id) { pm.environment.set("userId", data.id); }
+          console.log("Saved userId to environment.");
+      }
+    language: text/javascript
+examples: ./.resources/Registers a new patient login identity. Does not create a Patien.resources/examples
+order: 1000

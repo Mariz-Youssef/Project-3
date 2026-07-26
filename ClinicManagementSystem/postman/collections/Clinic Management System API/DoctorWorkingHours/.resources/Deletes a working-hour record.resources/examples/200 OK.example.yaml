@@ -1,0 +1,38 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/doctors/{{doctorId}}/working-hours/{{workingHourId}}"
+  method: DELETE
+  pathVariables:
+    - key: doctorId
+      value: "{{doctorId}}"
+      description: The doctor identifier.
+    - key: workingHourId
+      value: "{{workingHourId}}"
+      description: The working-hour identifier.
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: text
+    content: |-
+      {
+        "success": true,
+        "message": "string",
+        "data": null,
+        "errors": [
+          "string"
+        ],
+        "timestamp": "2026-07-25T09:00:00Z",
+        "traceId": "string",
+        "pagination": {
+          "pageNumber": 1,
+          "pageSize": 1,
+          "totalPages": 1,
+          "totalRecords": 1,
+          "hasNextPage": true,
+          "hasPreviousPage": true
+        }
+      }
+order: 1000

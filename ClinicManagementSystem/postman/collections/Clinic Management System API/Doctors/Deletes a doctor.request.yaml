@@ -1,0 +1,14 @@
+$kind: http-request
+description: Deletes a doctor.
+url: "{{baseUrl}}/api/Doctors/{{doctorId}}"
+method: DELETE
+pathVariables:
+  - key: doctorId
+    value: "{{doctorId}}"
+    description: The doctor's unique identifier.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Deletes a doctor.resources/examples
+order: 5000

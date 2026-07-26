@@ -1,0 +1,19 @@
+$kind: http-request
+description: "Authorization: Admin: Returns all medical records. Doctor: Returns only medical records created by the authenticated doctor. Patient: Returns only the authenticated patient's medical records."
+url: "{{baseUrl}}/api/MedicalRecords"
+method: GET
+queryParams:
+  - key: PageNumber
+    value: ""
+    disabled: true
+    description: Gets or sets the current page number. Values less than or equal to zero are automatically replaced with the default page number.
+  - key: PageSize
+    value: ""
+    disabled: true
+    description: Gets or sets the number of records per page. Values less than or equal to zero are replaced with the default page size. Values greater than the maximum allowed page size are capped.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Retrieves paginated medical records.resources/examples
+order: 1000

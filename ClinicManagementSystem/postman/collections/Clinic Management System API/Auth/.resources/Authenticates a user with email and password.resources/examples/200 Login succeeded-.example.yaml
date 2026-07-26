@@ -1,0 +1,52 @@
+$kind: http-example
+name: 200 Login succeeded.
+request:
+  url: "{{baseUrl}}/api/auth/login"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "email": "john.doe@example.com",
+        "password": "P@ssw0rd123!"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: text
+    content: |-
+      {
+        "success": true,
+        "message": "string",
+        "data": {
+          "userId": 1,
+          "fullName": "John Doe",
+          "email": "john.doe@example.com",
+          "roles": [
+            "string"
+          ],
+          "accessToken": "sample-access-token",
+          "accessTokenExpiresAt": "2026-07-25T09:00:00Z",
+          "refreshToken": "sample-refresh-token",
+          "refreshTokenExpiresAt": "2026-07-25T09:00:00Z"
+        },
+        "errors": [
+          "string"
+        ],
+        "timestamp": "2026-07-25T09:00:00Z",
+        "traceId": "string",
+        "pagination": {
+          "pageNumber": 1,
+          "pageSize": 1,
+          "totalPages": 1,
+          "totalRecords": 1,
+          "hasNextPage": true,
+          "hasPreviousPage": true
+        }
+      }
+order: 1000

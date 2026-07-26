@@ -1,0 +1,22 @@
+$kind: http-request
+description: Searches departments by name.
+url: "{{baseUrl}}/api/departments/search"
+method: GET
+queryParams:
+  - key: searchTerm
+    value: ""
+    disabled: true
+    description: The department name or part of the department name.
+  - key: PageNumber
+    value: ""
+    disabled: true
+    description: Gets or sets the current page number. Values less than or equal to zero are automatically replaced with the default page number.
+  - key: PageSize
+    value: ""
+    disabled: true
+    description: Gets or sets the number of records per page. Values less than or equal to zero are replaced with the default page size. Values greater than the maximum allowed page size are capped.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 6000

@@ -1,0 +1,14 @@
+$kind: http-request
+description: Only administrators are allowed to delete prescriptions.
+url: "{{baseUrl}}/api/Prescriptions/{{prescriptionId}}"
+method: DELETE
+pathVariables:
+  - key: prescriptionId
+    value: "{{prescriptionId}}"
+    description: Prescription identifier.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Deletes a prescription.resources/examples
+order: 5000

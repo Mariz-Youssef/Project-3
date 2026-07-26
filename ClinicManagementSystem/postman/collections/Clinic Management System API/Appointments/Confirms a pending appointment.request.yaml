@@ -1,0 +1,14 @@
+$kind: http-request
+description: Confirms a pending appointment.
+url: "{{baseUrl}}/api/Appointments/{{appointmentId}}/confirm"
+method: PATCH
+pathVariables:
+  - key: appointmentId
+    value: "{{appointmentId}}"
+    description: Appointment identifier.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Confirms a pending appointment.resources/examples
+order: 6000

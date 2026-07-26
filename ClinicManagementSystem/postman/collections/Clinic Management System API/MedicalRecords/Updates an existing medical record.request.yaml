@@ -1,0 +1,24 @@
+$kind: http-request
+description: Only doctors are allowed to update medical records. The authenticated doctor can update only medical records that belong to appointments assigned to him.
+url: "{{baseUrl}}/api/MedicalRecords/{{medicalRecordId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+pathVariables:
+  - key: medicalRecordId
+    value: "{{medicalRecordId}}"
+    description: Medical record identifier.
+body:
+  type: json
+  content: |-
+    {
+      "diagnosis": "Seasonal flu",
+      "notes": "Patient responded well to treatment.",
+      "followUpDate": "2026-07-25"
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Updates an existing medical record.resources/examples
+order: 4000

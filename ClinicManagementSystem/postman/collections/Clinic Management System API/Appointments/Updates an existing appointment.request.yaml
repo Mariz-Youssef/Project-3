@@ -1,0 +1,26 @@
+$kind: http-request
+description: Updates an existing appointment.
+url: "{{baseUrl}}/api/Appointments/{{appointmentId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+pathVariables:
+  - key: appointmentId
+    value: "{{appointmentId}}"
+    description: Appointment identifier.
+body:
+  type: json
+  content: |-
+    {
+      "appointmentDate": "2026-08-01T10:00:00Z",
+      "startTime": "09:00:00",
+      "endTime": "17:00:00",
+      "reason": "Regular checkup",
+      "notes": "Patient responded well to treatment."
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Updates an existing appointment.resources/examples
+order: 4000

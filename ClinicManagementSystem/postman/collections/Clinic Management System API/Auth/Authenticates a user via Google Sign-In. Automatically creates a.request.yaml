@@ -1,0 +1,17 @@
+$kind: http-request
+name: Authenticates a user via Google Sign-In. Automatically creates a patient account on first sign-in if no matching account exists
+description: Authenticates a user via Google Sign-In. Automatically creates a patient account on first sign-in if no matching account exists.
+url: "{{baseUrl}}/api/auth/google"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "idToken": "sample-google-id-token"
+    }
+auth:
+  type: noauth
+examples: ./.resources/Authenticates a user via Google Sign-In. Automatically creates a.resources/examples
+order: 7000

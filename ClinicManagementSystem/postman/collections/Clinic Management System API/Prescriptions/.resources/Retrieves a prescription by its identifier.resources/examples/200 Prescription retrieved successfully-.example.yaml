@@ -1,0 +1,51 @@
+$kind: http-example
+name: 200 Prescription retrieved successfully.
+request:
+  url: "{{baseUrl}}/api/Prescriptions/{{prescriptionId}}"
+  method: GET
+  pathVariables:
+    - key: prescriptionId
+      value: "{{prescriptionId}}"
+      description: Prescription identifier.
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: text
+    content: |-
+      {
+        "success": true,
+        "message": "string",
+        "data": {
+          "id": 1,
+          "medicalRecordId": 1,
+          "appointmentId": 1,
+          "doctorId": 1,
+          "doctorName": "string",
+          "patientId": 1,
+          "patientName": "string",
+          "medicineName": "string",
+          "dosage": "500mg",
+          "frequency": "Twice a day",
+          "duration": "7 days",
+          "instructions": "Take after meals.",
+          "createdAt": "2026-07-25T09:00:00Z",
+          "updatedAt": "2026-07-25T09:00:00Z"
+        },
+        "errors": [
+          "string"
+        ],
+        "timestamp": "2026-07-25T09:00:00Z",
+        "traceId": "string",
+        "pagination": {
+          "pageNumber": 1,
+          "pageSize": 1,
+          "totalPages": 1,
+          "totalRecords": 1,
+          "hasNextPage": true,
+          "hasPreviousPage": true
+        }
+      }
+order: 1000

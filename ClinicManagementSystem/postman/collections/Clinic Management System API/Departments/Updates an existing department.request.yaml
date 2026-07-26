@@ -1,0 +1,22 @@
+$kind: http-request
+description: Updates an existing department.
+url: "{{baseUrl}}/api/departments/{{departmentId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+pathVariables:
+  - key: departmentId
+    value: "{{departmentId}}"
+    description: The unique identifier of the department.
+body:
+  type: json
+  content: |-
+    {
+      "name": "Cardiology",
+      "description": "Sample description text."
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 4000

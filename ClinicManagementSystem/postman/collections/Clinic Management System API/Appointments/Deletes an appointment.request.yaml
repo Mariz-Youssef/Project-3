@@ -1,0 +1,14 @@
+$kind: http-request
+description: Deletes an appointment.
+url: "{{baseUrl}}/api/Appointments/{{appointmentId}}"
+method: DELETE
+pathVariables:
+  - key: appointmentId
+    value: "{{appointmentId}}"
+    description: Appointment identifier.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Deletes an appointment.resources/examples
+order: 5000

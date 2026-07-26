@@ -1,0 +1,17 @@
+$kind: http-request
+description: Deletes a working-hour record.
+url: "{{baseUrl}}/api/doctors/{{doctorId}}/working-hours/{{workingHourId}}"
+method: DELETE
+pathVariables:
+  - key: doctorId
+    value: "{{doctorId}}"
+    description: The doctor identifier.
+  - key: workingHourId
+    value: "{{workingHourId}}"
+    description: The working-hour identifier.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Deletes a working-hour record.resources/examples
+order: 5000

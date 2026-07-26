@@ -1,0 +1,48 @@
+$kind: http-example
+name: 200 Appointment retrieved successfully.
+request:
+  url: "{{baseUrl}}/api/Appointments/{{appointmentId}}"
+  method: GET
+  pathVariables:
+    - key: appointmentId
+      value: "{{appointmentId}}"
+      description: Appointment identifier.
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: text
+    content: |-
+      {
+        "success": true,
+        "message": "string",
+        "data": {
+          "id": 1,
+          "doctorId": 1,
+          "doctorName": "string",
+          "patientId": 1,
+          "patientName": "string",
+          "appointmentDate": "2026-08-01T10:00:00Z",
+          "startTime": "09:00:00",
+          "endTime": "17:00:00",
+          "status": "Pending",
+          "reason": "Regular checkup",
+          "notes": "Patient responded well to treatment."
+        },
+        "errors": [
+          "string"
+        ],
+        "timestamp": "2026-07-25T09:00:00Z",
+        "traceId": "string",
+        "pagination": {
+          "pageNumber": 1,
+          "pageSize": 1,
+          "totalPages": 1,
+          "totalRecords": 1,
+          "hasNextPage": true,
+          "hasPreviousPage": true
+        }
+      }
+order: 1000

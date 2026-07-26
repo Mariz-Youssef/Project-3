@@ -1,0 +1,17 @@
+$kind: http-request
+description: Retrieves a working-hour record by its identifier.
+url: "{{baseUrl}}/api/doctors/{{doctorId}}/working-hours/{{workingHourId}}"
+method: GET
+pathVariables:
+  - key: doctorId
+    value: "{{doctorId}}"
+    description: The doctor identifier.
+  - key: workingHourId
+    value: "{{workingHourId}}"
+    description: The working-hour identifier.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Retrieves a working-hour record by its identifier.resources/examples
+order: 3000

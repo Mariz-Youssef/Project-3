@@ -1,0 +1,14 @@
+$kind: http-request
+description: Retrieves a prescription by its identifier.
+url: "{{baseUrl}}/api/Prescriptions/{{prescriptionId}}"
+method: GET
+pathVariables:
+  - key: prescriptionId
+    value: "{{prescriptionId}}"
+    description: Prescription identifier.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Retrieves a prescription by its identifier.resources/examples
+order: 3000

@@ -1,0 +1,13 @@
+$kind: http-request
+description: Soft deletes a department.
+url: "{{baseUrl}}/api/departments/{{departmentId}}"
+method: DELETE
+pathVariables:
+  - key: departmentId
+    value: "{{departmentId}}"
+    description: The unique identifier of the department.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 5000

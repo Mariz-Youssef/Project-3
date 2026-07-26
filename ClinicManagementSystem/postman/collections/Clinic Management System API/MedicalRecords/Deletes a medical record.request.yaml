@@ -1,0 +1,14 @@
+$kind: http-request
+description: Only administrators are allowed to delete medical records. The medical record is removed using the application's soft-delete mechanism.
+url: "{{baseUrl}}/api/MedicalRecords/{{medicalRecordId}}"
+method: DELETE
+pathVariables:
+  - key: medicalRecordId
+    value: "{{medicalRecordId}}"
+    description: Medical record identifier.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Deletes a medical record.resources/examples
+order: 5000

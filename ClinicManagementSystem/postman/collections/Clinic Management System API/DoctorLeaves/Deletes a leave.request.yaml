@@ -1,0 +1,13 @@
+$kind: http-request
+description: Deletes a leave.
+url: "{{baseUrl}}/api/doctors/{{doctorId}}/leaves/{{leaveId}}"
+method: DELETE
+pathVariables:
+  doctorId: "{{doctorId}}"
+  leaveId: "{{leaveId}}"
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Deletes a leave.resources/examples
+order: 5000

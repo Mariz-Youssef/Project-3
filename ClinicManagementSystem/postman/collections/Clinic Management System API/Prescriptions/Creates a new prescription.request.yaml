@@ -1,0 +1,33 @@
+$kind: http-request
+description: Only doctors are allowed to create prescriptions.
+url: "{{baseUrl}}/api/Prescriptions"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "medicalRecordId": 1,
+      "medicineName": "string",
+      "dosage": "500mg",
+      "frequency": "Twice a day",
+      "duration": "7 days",
+      "instructions": "Take after meals."
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      if (pm.response.code === 200 || pm.response.code === 201) {
+          const response = pm.response.json();
+          const data = response.data || response;
+          if (data && data.id) { pm.environment.set("prescriptionId", data.id); }
+          console.log("Saved prescriptionId to environment.");
+      }
+    language: text/javascript
+examples: ./.resources/Creates a new prescription.resources/examples
+order: 2000

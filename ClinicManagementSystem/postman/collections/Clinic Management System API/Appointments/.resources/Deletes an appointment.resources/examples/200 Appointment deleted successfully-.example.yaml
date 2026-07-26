@@ -1,0 +1,36 @@
+$kind: http-example
+name: 200 Appointment deleted successfully.
+request:
+  url: "{{baseUrl}}/api/Appointments/{{appointmentId}}"
+  method: DELETE
+  pathVariables:
+    - key: appointmentId
+      value: "{{appointmentId}}"
+      description: Appointment identifier.
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: text
+    content: |-
+      {
+        "success": true,
+        "message": "string",
+        "data": true,
+        "errors": [
+          "string"
+        ],
+        "timestamp": "2026-07-25T09:00:00Z",
+        "traceId": "string",
+        "pagination": {
+          "pageNumber": 1,
+          "pageSize": 1,
+          "totalPages": 1,
+          "totalRecords": 1,
+          "hasNextPage": true,
+          "hasPreviousPage": true
+        }
+      }
+order: 1000

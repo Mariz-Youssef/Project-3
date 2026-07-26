@@ -1,0 +1,26 @@
+$kind: http-request
+description: Updates an existing doctor.
+url: "{{baseUrl}}/api/Doctors/{{doctorId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+pathVariables:
+  - key: doctorId
+    value: "{{doctorId}}"
+    description: The doctor's unique identifier.
+body:
+  type: json
+  content: |-
+    {
+      "departmentId": 1,
+      "specialization": "Cardiologist",
+      "licenseNumber": "LIC-123456",
+      "yearsOfExperience": 1,
+      "consultationFee": 1.0
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Updates an existing doctor.resources/examples
+order: 4000

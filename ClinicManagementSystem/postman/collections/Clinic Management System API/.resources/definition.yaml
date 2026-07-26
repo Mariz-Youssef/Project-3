@@ -1,0 +1,21 @@
+$kind: collection
+description: Complete Postman collection for the Clinic Management System API, generated from the project's OpenAPI (Swagger) specification. Includes all endpoints grouped by controller, Bearer token authentication, sample request bodies, and automated scripts for token and ID capture.
+variables:
+  baseUrl: https://localhost:5001
+  token: ""
+  refreshToken: ""
+  patientId: ""
+  doctorId: ""
+  appointmentId: ""
+  departmentId: ""
+  medicalRecordId: ""
+  prescriptionId: ""
+  leaveId: ""
+  workingHourId: ""
+  userId: ""
+auth:
+  - id: be55cbb0-ff53-47e6-a22d-a5186c89494a
+    type: bearer
+    name: bearer auth
+    credentials:
+      token: "{{token}}"

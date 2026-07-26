@@ -1,0 +1,14 @@
+$kind: http-request
+description: Marks a confirmed appointment as completed.
+url: "{{baseUrl}}/api/Appointments/{{appointmentId}}/complete"
+method: PATCH
+pathVariables:
+  - key: appointmentId
+    value: "{{appointmentId}}"
+    description: Appointment identifier.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Marks a confirmed appointment as completed.resources/examples
+order: 7000

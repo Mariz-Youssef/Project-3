@@ -1,0 +1,60 @@
+$kind: http-example
+name: 201 Prescription created successfully.
+request:
+  url: "{{baseUrl}}/api/Prescriptions"
+  method: POST
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "medicalRecordId": 1,
+        "medicineName": "string",
+        "dosage": "500mg",
+        "frequency": "Twice a day",
+        "duration": "7 days",
+        "instructions": "Take after meals."
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: text
+    content: |-
+      {
+        "success": true,
+        "message": "string",
+        "data": {
+          "id": 1,
+          "medicalRecordId": 1,
+          "appointmentId": 1,
+          "doctorId": 1,
+          "doctorName": "string",
+          "patientId": 1,
+          "patientName": "string",
+          "medicineName": "string",
+          "dosage": "500mg",
+          "frequency": "Twice a day",
+          "duration": "7 days",
+          "instructions": "Take after meals.",
+          "createdAt": "2026-07-25T09:00:00Z",
+          "updatedAt": "2026-07-25T09:00:00Z"
+        },
+        "errors": [
+          "string"
+        ],
+        "timestamp": "2026-07-25T09:00:00Z",
+        "traceId": "string",
+        "pagination": {
+          "pageNumber": 1,
+          "pageSize": 1,
+          "totalPages": 1,
+          "totalRecords": 1,
+          "hasNextPage": true,
+          "hasPreviousPage": true
+        }
+      }
+order: 1000

@@ -1,0 +1,44 @@
+$kind: http-example
+name: 200 Doctor retrieved successfully.
+request:
+  url: "{{baseUrl}}/api/Doctors/{{doctorId}}"
+  method: GET
+  pathVariables:
+    - key: doctorId
+      value: "{{doctorId}}"
+      description: The doctor's unique identifier.
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: text
+    content: |-
+      {
+        "success": true,
+        "message": "string",
+        "data": {
+          "id": 1,
+          "fullName": "John Doe",
+          "email": "john.doe@example.com",
+          "department": "string",
+          "specialization": "Cardiologist",
+          "yearsOfExperience": 1,
+          "consultationFee": 1.0
+        },
+        "errors": [
+          "string"
+        ],
+        "timestamp": "2026-07-25T09:00:00Z",
+        "traceId": "string",
+        "pagination": {
+          "pageNumber": 1,
+          "pageSize": 1,
+          "totalPages": 1,
+          "totalRecords": 1,
+          "hasNextPage": true,
+          "hasPreviousPage": true
+        }
+      }
+order: 1000

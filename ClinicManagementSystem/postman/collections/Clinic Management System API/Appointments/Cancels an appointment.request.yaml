@@ -1,0 +1,14 @@
+$kind: http-request
+description: Cancels an appointment.
+url: "{{baseUrl}}/api/Appointments/{{appointmentId}}/cancel"
+method: PATCH
+pathVariables:
+  - key: appointmentId
+    value: "{{appointmentId}}"
+    description: Appointment identifier.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Cancels an appointment.resources/examples
+order: 8000

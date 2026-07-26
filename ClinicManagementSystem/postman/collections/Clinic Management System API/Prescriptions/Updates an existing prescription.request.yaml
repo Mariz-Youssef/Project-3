@@ -1,0 +1,26 @@
+$kind: http-request
+description: Only doctors are allowed to update prescriptions.
+url: "{{baseUrl}}/api/Prescriptions/{{prescriptionId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+pathVariables:
+  - key: prescriptionId
+    value: "{{prescriptionId}}"
+    description: Prescription identifier.
+body:
+  type: json
+  content: |-
+    {
+      "medicineName": "string",
+      "dosage": "500mg",
+      "frequency": "Twice a day",
+      "duration": "7 days",
+      "instructions": "Take after meals."
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Updates an existing prescription.resources/examples
+order: 4000

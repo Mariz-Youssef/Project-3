@@ -1,0 +1,13 @@
+$kind: http-request
+description: Deletes a patient profile by its unique identifier.
+url: "{{baseUrl}}/api/patients/{{patientId}}"
+method: DELETE
+pathVariables:
+  - key: patientId
+    value: "{{patientId}}"
+    description: The unique identifier of the patient profile.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 6000

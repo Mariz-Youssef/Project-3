@@ -1,0 +1,48 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/doctors/{{doctorId}}/leaves"
+  method: POST
+  headers:
+    Content-Type: application/json
+  pathVariables:
+    doctorId: "{{doctorId}}"
+  body:
+    type: json
+    content: |-
+      {
+        "startDate": "2026-08-01",
+        "endDate": "2026-08-05",
+        "reason": "Regular checkup"
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: text
+    content: |-
+      {
+        "success": true,
+        "message": "string",
+        "data": {
+          "id": 1,
+          "startDate": "2026-08-01",
+          "endDate": "2026-08-05",
+          "reason": "Regular checkup"
+        },
+        "errors": [
+          "string"
+        ],
+        "timestamp": "2026-07-25T09:00:00Z",
+        "traceId": "string",
+        "pagination": {
+          "pageNumber": 1,
+          "pageSize": 1,
+          "totalPages": 1,
+          "totalRecords": 1,
+          "hasNextPage": true,
+          "hasPreviousPage": true
+        }
+      }
+order: 1000

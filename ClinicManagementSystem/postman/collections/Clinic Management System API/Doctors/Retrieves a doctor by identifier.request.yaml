@@ -1,0 +1,14 @@
+$kind: http-request
+description: Retrieves a doctor by identifier.
+url: "{{baseUrl}}/api/Doctors/{{doctorId}}"
+method: GET
+pathVariables:
+  - key: doctorId
+    value: "{{doctorId}}"
+    description: The doctor's unique identifier.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Retrieves a doctor by identifier.resources/examples
+order: 3000

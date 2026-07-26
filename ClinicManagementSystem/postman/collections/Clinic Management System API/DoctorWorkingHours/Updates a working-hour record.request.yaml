@@ -1,0 +1,27 @@
+$kind: http-request
+description: Updates a working-hour record.
+url: "{{baseUrl}}/api/doctors/{{doctorId}}/working-hours/{{workingHourId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+pathVariables:
+  - key: doctorId
+    value: "{{doctorId}}"
+    description: The doctor identifier.
+  - key: workingHourId
+    value: "{{workingHourId}}"
+    description: The working-hour identifier.
+body:
+  type: json
+  content: |-
+    {
+      "dayOfWeek": "Monday",
+      "startTime": "09:00:00",
+      "endTime": "17:00:00"
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Updates a working-hour record.resources/examples
+order: 4000

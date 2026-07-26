@@ -1,0 +1,21 @@
+$kind: http-request
+description: Retrieves all leaves for a doctor.
+url: "{{baseUrl}}/api/doctors/{{doctorId}}/leaves"
+method: GET
+queryParams:
+  - key: PageNumber
+    value: ""
+    disabled: true
+    description: Gets or sets the current page number. Values less than or equal to zero are automatically replaced with the default page number.
+  - key: PageSize
+    value: ""
+    disabled: true
+    description: Gets or sets the number of records per page. Values less than or equal to zero are replaced with the default page size. Values greater than the maximum allowed page size are capped.
+pathVariables:
+  doctorId: "{{doctorId}}"
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Retrieves all leaves for a doctor.resources/examples
+order: 1000

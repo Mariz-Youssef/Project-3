@@ -1,0 +1,13 @@
+$kind: http-request
+description: Retrieves a department by its unique identifier.
+url: "{{baseUrl}}/api/departments/{{departmentId}}"
+method: GET
+pathVariables:
+  - key: departmentId
+    value: "{{departmentId}}"
+    description: The unique identifier of the department.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 3000

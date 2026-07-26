@@ -1,0 +1,32 @@
+$kind: http-request
+description: Creates a leave for a doctor.
+url: "{{baseUrl}}/api/doctors/{{doctorId}}/leaves"
+method: POST
+headers:
+  Content-Type: application/json
+pathVariables:
+  doctorId: "{{doctorId}}"
+body:
+  type: json
+  content: |-
+    {
+      "startDate": "2026-08-01",
+      "endDate": "2026-08-05",
+      "reason": "Regular checkup"
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      if (pm.response.code === 200 || pm.response.code === 201) {
+          const response = pm.response.json();
+          const data = response.data || response;
+          if (data && data.id) { pm.environment.set("leaveId", data.id); }
+          console.log("Saved leaveId to environment.");
+      }
+    language: text/javascript
+examples: ./.resources/Creates a leave for a doctor.resources/examples
+order: 2000

@@ -1,0 +1,7 @@
+workspace:
+  id: fc80fd62-7907-4fbd-8949-efe8ca03413f
+cloudResources:
+  collections:
+    ../postman/collections/Clinic Management System API: 56901598-75249419-145d-499c-a2be-a2b89135a49b
+  environments:
+    ../postman/environments/ClinicManagementSystem.environment.yaml: 56901598-a087e5a2-d5ac-4314-a8e4-ce719c8e2163

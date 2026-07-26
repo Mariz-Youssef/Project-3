@@ -1,0 +1,14 @@
+$kind: http-request
+description: Retrieves a medical record by its identifier.
+url: "{{baseUrl}}/api/MedicalRecords/{{medicalRecordId}}"
+method: GET
+pathVariables:
+  - key: medicalRecordId
+    value: "{{medicalRecordId}}"
+    description: Medical record identifier.
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Retrieves a medical record by its identifier.resources/examples
+order: 3000

@@ -1,0 +1,18 @@
+$kind: http-request
+name: Returns all available appointment slots for a doctor on a specific date
+description: Returns all available appointment slots for a doctor on a specific date.
+url: "{{baseUrl}}/api/Appointments/available-slots"
+method: GET
+queryParams:
+  - key: doctorId
+    value: ""
+    disabled: true
+  - key: date
+    value: ""
+    disabled: true
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Returns all available appointment slots for a doctor on a specif.resources/examples
+order: 9000

@@ -1,0 +1,50 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/doctors/{{doctorId}}/working-hours"
+  method: POST
+  headers:
+    Content-Type: application/json
+  pathVariables:
+    - key: doctorId
+      value: "{{doctorId}}"
+      description: The doctor identifier.
+  body:
+    type: json
+    content: |-
+      {
+        "dayOfWeek": "Monday",
+        "startTime": "09:00:00",
+        "endTime": "17:00:00"
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: text
+    content: |-
+      {
+        "success": true,
+        "message": "string",
+        "data": {
+          "id": 1,
+          "dayOfWeek": "Monday",
+          "startTime": "09:00:00",
+          "endTime": "17:00:00"
+        },
+        "errors": [
+          "string"
+        ],
+        "timestamp": "2026-07-25T09:00:00Z",
+        "traceId": "string",
+        "pagination": {
+          "pageNumber": 1,
+          "pageSize": 1,
+          "totalPages": 1,
+          "totalRecords": 1,
+          "hasNextPage": true,
+          "hasPreviousPage": true
+        }
+      }
+order: 1000

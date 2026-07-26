@@ -1,0 +1,19 @@
+$kind: http-request
+name: Revokes a refresh token, effectively logging out the device that holds it. Requires an authenticated caller
+description: Revokes a refresh token, effectively logging out the device that holds it. Requires an authenticated caller.
+url: "{{baseUrl}}/api/auth/revoke-token"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "refreshToken": "sample-refresh-token"
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+examples: ./.resources/Revokes a refresh token, effectively logging out the device that.resources/examples
+order: 5000
