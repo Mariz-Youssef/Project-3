@@ -562,6 +562,8 @@ Potential future enhancements include:
 - Integration Testing
 
 ---
+# Project demo:  
+https://drive.google.com/file/d/13rGs7uB5-7ztMrZpynymU1SIR5vMNac9/view?usp=drive_link
 
 # 👨‍💻 Developers
 
@@ -569,12 +571,5 @@ Potential future enhancements include:
 ## Mariz Youssef
 ## Omar Mounes
 ## Ester Emad
-
-
-# ⭐ Support
-
-If you found this project useful, consider giving it a ⭐ on GitHub.
-
-Your support is greatly appreciated!
 
 
