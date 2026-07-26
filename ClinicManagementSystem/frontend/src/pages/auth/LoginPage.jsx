@@ -50,20 +50,24 @@ export function LoginPage() {
   }
 
   // Handles the ID token Google hands back after the person picks an account.
-  async function handleGoogleCredential(response) {
-    setGoogleError(null);
-    try {
-      const result = await axiosClient
-        .post("/auth/google", { idToken: response.credential })
-        .then(unwrap);
+    async function handleGoogleCredential(response) {
+        setGoogleError(null);
+        try {
+            const result = await axiosClient
+                .post("/auth/google", { idToken: response.credential })
+                .then(unwrap);
 
-      setTokens(extractTokens(result));
-      // Full reload so AuthProvider re-reads the freshly stored tokens.
-      window.location.href = redirectTo;
-    } catch (err) {
-      setGoogleError(unwrapError(err).message);
+            const tokens = extractTokens(result);
+            setTokens(tokens);
+
+            // Call your auth context login method or refresh auth state gracefully
+            await login({ googleToken: response.credential }); // or pass tokens/user directly
+
+            navigate(redirectTo, { replace: true });
+        } catch (err) {
+            setGoogleError(unwrapError(err)?.message || "Google sign-in failed");
+        }
     }
-  }
 
   // Loads Google's Identity Services script once, then renders its button
   // into googleButtonRef once the script is ready.

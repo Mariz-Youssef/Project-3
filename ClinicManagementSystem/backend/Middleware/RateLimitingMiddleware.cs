@@ -28,7 +28,7 @@ namespace ClinicManagementSystem.backend.Middleware
                         partitionKey: clientIp,
                         factory: _ => new FixedWindowRateLimiterOptions
                         {
-                            PermitLimit = 30,
+                            PermitLimit = 50,
                             Window = TimeSpan.FromMinutes(1),
                             QueueLimit = 0,
                             QueueProcessingOrder = QueueProcessingOrder.OldestFirst,

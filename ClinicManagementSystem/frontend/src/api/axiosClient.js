@@ -2,6 +2,7 @@ import axios from "axios";
 import { getTokens, setTokens, clearTokens } from "../utils/storage";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
+console.log("BASE_URL =", BASE_URL);
 
 export const axiosClient = axios.create({
   baseURL: BASE_URL,

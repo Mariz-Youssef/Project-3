@@ -80,16 +80,26 @@ export function DepartmentsPage() {
             header: "",
             render: (row) => (
               <div className="table-row-actions">
-                <Button size="sm" variant="ghost" onClick={() => openEdit(row)}>
-                  Edit
-                </Button>
-                <Button
-                  size="sm"
-                  variant="danger"
-                  onClick={() => setPendingDelete(row)}
-                >
-                  Delete
-                </Button>
+                    <Button
+                        size="sm"
+                        variant="danger"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setPendingDelete(row);
+                        }}
+                    >
+                        Delete
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            openEdit(row);
+                        }}
+                    >
+                        Edit
+                    </Button>
               </div>
             ),
           },
